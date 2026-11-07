@@ -1,0 +1,742 @@
+{
+  "checks": 147,
+  "passed": 147,
+  "failed": 0,
+  "results": [
+    {
+      "check": "CSV 文件数量",
+      "status": "passed",
+      "detail": "实际 35，预期 35"
+    },
+    {
+      "check": "UTF-8-SIG：第一类招聘数据_标准化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：第一类招聘数据_标准化.csv",
+      "status": "passed",
+      "detail": "字段 85，记录 20014"
+    },
+    {
+      "check": "UTF-8-SIG：第三类职业标准_标准化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：第三类职业标准_标准化.csv",
+      "status": "passed",
+      "detail": "字段 43，记录 7"
+    },
+    {
+      "check": "UTF-8-SIG：第三类职业要求_标准化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：第三类职业要求_标准化.csv",
+      "status": "passed",
+      "detail": "字段 30，记录 210"
+    },
+    {
+      "check": "UTF-8-SIG：第二类技能词库_标准化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：第二类技能词库_标准化.csv",
+      "status": "passed",
+      "detail": "字段 41，记录 3695"
+    },
+    {
+      "check": "UTF-8-SIG：第五类证书实体_标准化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：第五类证书实体_标准化.csv",
+      "status": "passed",
+      "detail": "字段 47，记录 208"
+    },
+    {
+      "check": "UTF-8-SIG：第六类行业报告_标准化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：第六类行业报告_标准化.csv",
+      "status": "passed",
+      "detail": "字段 51，记录 138"
+    },
+    {
+      "check": "UTF-8-SIG：第六类趋势信号_标准化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：第六类趋势信号_标准化.csv",
+      "status": "passed",
+      "detail": "字段 34，记录 734"
+    },
+    {
+      "check": "UTF-8-SIG：第四类专业实体_标准化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：第四类专业实体_标准化.csv",
+      "status": "passed",
+      "detail": "字段 34，记录 16"
+    },
+    {
+      "check": "UTF-8-SIG：第四类课程实体_标准化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：第四类课程实体_标准化.csv",
+      "status": "passed",
+      "detail": "字段 69，记录 788"
+    },
+    {
+      "check": "UTF-8-SIG：专业实体_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：专业实体_归一化.csv",
+      "status": "passed",
+      "detail": "字段 16，记录 16"
+    },
+    {
+      "check": "UTF-8-SIG：岗位实体_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：岗位实体_归一化.csv",
+      "status": "passed",
+      "detail": "字段 23，记录 20014"
+    },
+    {
+      "check": "UTF-8-SIG：岗位技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：岗位技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "字段 33，记录 50610"
+    },
+    {
+      "check": "UTF-8-SIG：技能实体_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：技能实体_归一化.csv",
+      "status": "passed",
+      "detail": "字段 16，记录 3695"
+    },
+    {
+      "check": "UTF-8-SIG：技能层级关系_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：技能层级关系_归一化.csv",
+      "status": "passed",
+      "detail": "字段 16，记录 437"
+    },
+    {
+      "check": "UTF-8-SIG：报告趋势主题关系_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：报告趋势主题关系_归一化.csv",
+      "status": "passed",
+      "detail": "字段 20，记录 489"
+    },
+    {
+      "check": "UTF-8-SIG：报告趋势信号关系_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：报告趋势信号关系_归一化.csv",
+      "status": "passed",
+      "detail": "字段 11，记录 734"
+    },
+    {
+      "check": "UTF-8-SIG：职业标准实体_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：职业标准实体_归一化.csv",
+      "status": "passed",
+      "detail": "字段 16，记录 7"
+    },
+    {
+      "check": "UTF-8-SIG：职业标准要求关系_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：职业标准要求关系_归一化.csv",
+      "status": "passed",
+      "detail": "字段 14，记录 210"
+    },
+    {
+      "check": "UTF-8-SIG：职业要求实体_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：职业要求实体_归一化.csv",
+      "status": "passed",
+      "detail": "字段 15，记录 210"
+    },
+    {
+      "check": "UTF-8-SIG：证书实体_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：证书实体_归一化.csv",
+      "status": "passed",
+      "detail": "字段 16，记录 208"
+    },
+    {
+      "check": "UTF-8-SIG：证书技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：证书技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "字段 33，记录 361"
+    },
+    {
+      "check": "UTF-8-SIG：课程专业关系_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：课程专业关系_归一化.csv",
+      "status": "passed",
+      "detail": "字段 22，记录 48"
+    },
+    {
+      "check": "UTF-8-SIG：课程实体_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：课程实体_归一化.csv",
+      "status": "passed",
+      "detail": "字段 18，记录 788"
+    },
+    {
+      "check": "UTF-8-SIG：课程技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：课程技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "字段 25，记录 2008"
+    },
+    {
+      "check": "UTF-8-SIG：趋势主题实体_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：趋势主题实体_归一化.csv",
+      "status": "passed",
+      "detail": "字段 12，记录 18"
+    },
+    {
+      "check": "UTF-8-SIG：趋势信号实体_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：趋势信号实体_归一化.csv",
+      "status": "passed",
+      "detail": "字段 16，记录 734"
+    },
+    {
+      "check": "UTF-8-SIG：趋势技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：趋势技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "字段 27，记录 245"
+    },
+    {
+      "check": "UTF-8-SIG：趋势报告实体_归一化.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：趋势报告实体_归一化.csv",
+      "status": "passed",
+      "detail": "字段 20，记录 138"
+    },
+    {
+      "check": "UTF-8-SIG：岗位技能变化事件_动态演示.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：岗位技能变化事件_动态演示.csv",
+      "status": "passed",
+      "detail": "字段 17，记录 1378"
+    },
+    {
+      "check": "UTF-8-SIG：岗位技能年度趋势_动态演示.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：岗位技能年度趋势_动态演示.csv",
+      "status": "passed",
+      "detail": "字段 9，记录 1385"
+    },
+    {
+      "check": "UTF-8-SIG：岗位技能月度趋势_动态演示.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：岗位技能月度趋势_动态演示.csv",
+      "status": "passed",
+      "detail": "字段 9，记录 4792"
+    },
+    {
+      "check": "UTF-8-SIG：岗位类别月度规模_动态演示.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：岗位类别月度规模_动态演示.csv",
+      "status": "passed",
+      "detail": "字段 6，记录 289"
+    },
+    {
+      "check": "UTF-8-SIG：新兴岗位候选_动态演示.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：新兴岗位候选_动态演示.csv",
+      "status": "passed",
+      "detail": "字段 12，记录 9"
+    },
+    {
+      "check": "UTF-8-SIG：既有岗位技能变化候选_动态演示.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：既有岗位技能变化候选_动态演示.csv",
+      "status": "passed",
+      "detail": "字段 15，记录 73"
+    },
+    {
+      "check": "UTF-8-SIG：趋势主题时间线_动态演示.csv",
+      "status": "passed",
+      "detail": "存在 BOM"
+    },
+    {
+      "check": "CSV 表头：趋势主题时间线_动态演示.csv",
+      "status": "passed",
+      "detail": "字段 7，记录 220"
+    },
+    {
+      "check": "实体主键非空：岗位实体_归一化.csv",
+      "status": "passed",
+      "detail": "记录 20014"
+    },
+    {
+      "check": "实体主键唯一：岗位实体_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 20014/20014"
+    },
+    {
+      "check": "实体主键非空：技能实体_归一化.csv",
+      "status": "passed",
+      "detail": "记录 3695"
+    },
+    {
+      "check": "实体主键唯一：技能实体_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 3695/3695"
+    },
+    {
+      "check": "实体主键非空：职业标准实体_归一化.csv",
+      "status": "passed",
+      "detail": "记录 7"
+    },
+    {
+      "check": "实体主键唯一：职业标准实体_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 7/7"
+    },
+    {
+      "check": "实体主键非空：职业要求实体_归一化.csv",
+      "status": "passed",
+      "detail": "记录 210"
+    },
+    {
+      "check": "实体主键唯一：职业要求实体_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 210/210"
+    },
+    {
+      "check": "实体主键非空：专业实体_归一化.csv",
+      "status": "passed",
+      "detail": "记录 16"
+    },
+    {
+      "check": "实体主键唯一：专业实体_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 16/16"
+    },
+    {
+      "check": "实体主键非空：课程实体_归一化.csv",
+      "status": "passed",
+      "detail": "记录 788"
+    },
+    {
+      "check": "实体主键唯一：课程实体_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 788/788"
+    },
+    {
+      "check": "实体主键非空：证书实体_归一化.csv",
+      "status": "passed",
+      "detail": "记录 208"
+    },
+    {
+      "check": "实体主键唯一：证书实体_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 208/208"
+    },
+    {
+      "check": "实体主键非空：趋势报告实体_归一化.csv",
+      "status": "passed",
+      "detail": "记录 138"
+    },
+    {
+      "check": "实体主键唯一：趋势报告实体_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 138/138"
+    },
+    {
+      "check": "实体主键非空：趋势信号实体_归一化.csv",
+      "status": "passed",
+      "detail": "记录 734"
+    },
+    {
+      "check": "实体主键唯一：趋势信号实体_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 734/734"
+    },
+    {
+      "check": "实体主键非空：趋势主题实体_归一化.csv",
+      "status": "passed",
+      "detail": "记录 18"
+    },
+    {
+      "check": "实体主键唯一：趋势主题实体_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 18/18"
+    },
+    {
+      "check": "关系边 ID 唯一：岗位技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "记录 50610"
+    },
+    {
+      "check": "关系对唯一：岗位技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 50610/50610"
+    },
+    {
+      "check": "关系外键：岗位技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "起点缺失 0，终点缺失 0"
+    },
+    {
+      "check": "图谱可用状态：岗位技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "全部 true"
+    },
+    {
+      "check": "关系边 ID 唯一：技能层级关系_归一化.csv",
+      "status": "passed",
+      "detail": "记录 437"
+    },
+    {
+      "check": "关系对唯一：技能层级关系_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 437/437"
+    },
+    {
+      "check": "关系外键：技能层级关系_归一化.csv",
+      "status": "passed",
+      "detail": "起点缺失 0，终点缺失 0"
+    },
+    {
+      "check": "图谱可用状态：技能层级关系_归一化.csv",
+      "status": "passed",
+      "detail": "全部 true"
+    },
+    {
+      "check": "关系边 ID 唯一：职业标准要求关系_归一化.csv",
+      "status": "passed",
+      "detail": "记录 210"
+    },
+    {
+      "check": "关系对唯一：职业标准要求关系_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 210/210"
+    },
+    {
+      "check": "关系外键：职业标准要求关系_归一化.csv",
+      "status": "passed",
+      "detail": "起点缺失 0，终点缺失 0"
+    },
+    {
+      "check": "图谱可用状态：职业标准要求关系_归一化.csv",
+      "status": "passed",
+      "detail": "全部 true"
+    },
+    {
+      "check": "关系边 ID 唯一：课程专业关系_归一化.csv",
+      "status": "passed",
+      "detail": "记录 48"
+    },
+    {
+      "check": "关系对唯一：课程专业关系_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 48/48"
+    },
+    {
+      "check": "关系外键：课程专业关系_归一化.csv",
+      "status": "passed",
+      "detail": "起点缺失 0，终点缺失 0"
+    },
+    {
+      "check": "图谱可用状态：课程专业关系_归一化.csv",
+      "status": "passed",
+      "detail": "全部 true"
+    },
+    {
+      "check": "关系边 ID 唯一：课程技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "记录 2008"
+    },
+    {
+      "check": "关系对唯一：课程技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 2008/2008"
+    },
+    {
+      "check": "关系外键：课程技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "起点缺失 0，终点缺失 0"
+    },
+    {
+      "check": "图谱可用状态：课程技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "全部 true"
+    },
+    {
+      "check": "关系边 ID 唯一：证书技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "记录 361"
+    },
+    {
+      "check": "关系对唯一：证书技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 361/361"
+    },
+    {
+      "check": "关系外键：证书技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "起点缺失 0，终点缺失 0"
+    },
+    {
+      "check": "图谱可用状态：证书技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "全部 true"
+    },
+    {
+      "check": "关系边 ID 唯一：报告趋势信号关系_归一化.csv",
+      "status": "passed",
+      "detail": "记录 734"
+    },
+    {
+      "check": "关系对唯一：报告趋势信号关系_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 734/734"
+    },
+    {
+      "check": "关系外键：报告趋势信号关系_归一化.csv",
+      "status": "passed",
+      "detail": "起点缺失 0，终点缺失 0"
+    },
+    {
+      "check": "图谱可用状态：报告趋势信号关系_归一化.csv",
+      "status": "passed",
+      "detail": "全部 true"
+    },
+    {
+      "check": "关系边 ID 唯一：报告趋势主题关系_归一化.csv",
+      "status": "passed",
+      "detail": "记录 489"
+    },
+    {
+      "check": "关系对唯一：报告趋势主题关系_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 489/489"
+    },
+    {
+      "check": "关系外键：报告趋势主题关系_归一化.csv",
+      "status": "passed",
+      "detail": "起点缺失 0，终点缺失 0"
+    },
+    {
+      "check": "图谱可用状态：报告趋势主题关系_归一化.csv",
+      "status": "passed",
+      "detail": "全部 true"
+    },
+    {
+      "check": "关系边 ID 唯一：趋势技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "记录 245"
+    },
+    {
+      "check": "关系对唯一：趋势技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "唯一 245/245"
+    },
+    {
+      "check": "关系外键：趋势技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "起点缺失 0，终点缺失 0"
+    },
+    {
+      "check": "图谱可用状态：趋势技能关系_归一化.csv",
+      "status": "passed",
+      "detail": "全部 true"
+    },
+    {
+      "check": "动态周期合法：岗位技能变化事件_动态演示.csv",
+      "status": "passed",
+      "detail": "非法周期 0"
+    },
+    {
+      "check": "候选需人工确认：岗位技能变化事件_动态演示.csv",
+      "status": "passed",
+      "detail": "异常标记 0"
+    },
+    {
+      "check": "动态周期合法：岗位技能年度趋势_动态演示.csv",
+      "status": "passed",
+      "detail": "非法周期 0"
+    },
+    {
+      "check": "动态周期合法：岗位技能月度趋势_动态演示.csv",
+      "status": "passed",
+      "detail": "非法周期 0"
+    },
+    {
+      "check": "动态周期合法：岗位类别月度规模_动态演示.csv",
+      "status": "passed",
+      "detail": "非法周期 0"
+    },
+    {
+      "check": "候选需人工确认：新兴岗位候选_动态演示.csv",
+      "status": "passed",
+      "detail": "异常标记 0"
+    },
+    {
+      "check": "候选需人工确认：既有岗位技能变化候选_动态演示.csv",
+      "status": "passed",
+      "detail": "异常标记 0"
+    },
+    {
+      "check": "动态周期合法：趋势主题时间线_动态演示.csv",
+      "status": "passed",
+      "detail": "非法周期 0"
+    },
+    {
+      "check": "JSON 可解析：动态演示摘要.json",
+      "status": "passed",
+      "detail": "有效"
+    },
+    {
+      "check": "JSON 可解析：治理质量摘要.json",
+      "status": "passed",
+      "detail": "有效"
+    },
+    {
+      "check": "JSON 可解析：数据集清单.json",
+      "status": "passed",
+      "detail": "有效"
+    },
+    {
+      "check": "JSONL 可解析：图谱节点.jsonl",
+      "status": "passed",
+      "detail": "记录 25828"
+    },
+    {
+      "check": "JSONL 可解析：图谱关系.jsonl",
+      "status": "passed",
+      "detail": "记录 55142"
+    },
+    {
+      "check": "说明文件：字段说明.csv",
+      "status": "passed",
+      "detail": "大小 111331"
+    },
+    {
+      "check": "说明文件：字段说明.md",
+      "status": "passed",
+      "detail": "大小 706"
+    },
+    {
+      "check": "说明文件：运行说明.md",
+      "status": "passed",
+      "detail": "大小 1754"
+    },
+    {
+      "check": "说明文件：01_JD实体技能抽取提示词.md",
+      "status": "passed",
+      "detail": "大小 1102"
+    },
+    {
+      "check": "说明文件：02_新岗位发现与定义提示词.md",
+      "status": "passed",
+      "detail": "大小 872"
+    },
+    {
+      "check": "说明文件：03_既有岗位能力更新提示词.md",
+      "status": "passed",
+      "detail": "大小 772"
+    },
+    {
+      "check": "说明文件：04_简历技能抽取与人岗匹配提示词.md",
+      "status": "passed",
+      "detail": "大小 840"
+    }
+  ]
+}

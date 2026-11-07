@@ -1,0 +1,3 @@
+skill_id,entity_name,review_status_final,eligible_for_graph_final
+s1,Python,approved,true
+s2,待复核技能,pending,true

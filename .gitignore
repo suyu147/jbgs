@@ -1,0 +1,23 @@
+.env
+**/.env.local
+backend/.venv/
+backend/quality_artifacts/
+frontend/node_modules/
+frontend/dist/
+frontend/.taste-skill/
+frontend/.playwright-cli/
+应用数据/
+**/__pycache__/
+**/.pytest_cache/
+**/.ruff_cache/
+**/.coverage
+*.pyc
+*.tsbuildinfo
+*.log
+
+database/neo4j/neo4j.dump
+各类所需数据/02_归一化/岗位技能关系_归一化.csv
+各类所需数据/01_标准化/第一类招聘数据_标准化.csv
+各类所需数据/04_JSON/图谱关系.jsonl
+# 也可以直接忽略整个数据文件夹（更省事）
+# 各类所需数据/

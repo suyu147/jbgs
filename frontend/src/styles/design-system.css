@@ -1,0 +1,706 @@
+/* Personal workspace system. Deliberately scoped: login and other portals own their visuals. */
+.app-shell.personal-portal {
+  --workspace-max: 100%;
+  --workspace-gutter: 10%;
+  --font-friendly: system-ui, "PingFang SC", "Microsoft YaHei UI", sans-serif;
+  --ui-brand: #176b5b; --ui-brand-hover: #105443; --ui-ground: #f4f8f5;
+  --ui-surface: #fff; --ui-tonal: #eaf3ed; --ui-line: #d5e1d8;
+  --ui-ink: #203b33; --ui-muted: #586c62; --ui-warning: #855d26; --ui-danger: #b43b35;
+  --ink: var(--ui-ink); --deep: var(--ui-ink); --muted: var(--ui-muted);
+  --brand: var(--ui-brand); --signal: var(--ui-brand); --line: var(--ui-line);
+  --el-color-primary: var(--ui-brand); --el-color-primary-light-9: var(--ui-tonal);
+  --el-border-radius-base: 10px; --el-text-color-regular: var(--ui-ink);
+  --el-text-color-placeholder: var(--ui-muted); --el-border-color: var(--ui-line);
+  background: var(--ui-ground) !important; color: var(--ui-ink);
+  font-family: system-ui, "PingFang SC", "Microsoft YaHei UI", sans-serif;
+  font-size: 14px; line-height: 1.6; font-variant-numeric: tabular-nums;
+}
+.personal-portal ::selection { background: #c8e5d4; color: #153e31; }
+.personal-portal :is(input,textarea) { caret-color: var(--ui-brand); }
+.personal-portal :is(input,textarea)::placeholder { color: var(--ui-muted); opacity: 1; }
+.personal-portal :is(h1,h2,h3) { font-family: inherit; letter-spacing: -.02em; color: var(--ui-ink); text-wrap: balance; }
+.personal-portal :is(h1,h2,h3,strong) { text-shadow: none !important; }
+.personal-portal h1 { font-size: 28px; line-height: 1.35; font-weight: 600; }
+.personal-portal h2 { font-size: 18px; font-weight: 600; }
+.personal-portal h3 { font-size: 15px; font-weight: 600; }
+.personal-portal :is(button,a,input,textarea,select,summary):focus-visible { outline: 2px solid var(--ui-brand); outline-offset: 3px; }
+.personal-portal :is(button,a) { touch-action: manipulation; }
+.personal-portal button { transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease; }
+.personal-portal button:disabled { cursor: not-allowed; }
+.personal-portal :is(.section-code,.command-kicker) { display: none; }
+.personal-portal :is(.panel,.jobs-filter-shell,.graph-workspace,.assistant-layout,.emerging-lab) { box-shadow: none; border-radius: 16px; border-color: var(--ui-line); }
+.app-shell.personal-portal > main,
+.app-shell.personal-portal .page-content,
+.app-shell.personal-portal .career-home { background: transparent !important; }
+.app-shell.personal-portal > main { width: min(var(--workspace-max),100%); min-height: calc(100vh - 76px); margin: auto; padding: 28px var(--workspace-gutter) 64px; }
+.app-shell.personal-portal .page-content { width: 100%; max-width: none; padding: 0; margin: 0; }
+.app-shell.personal-portal .workspace-heading { margin: 0 0 24px; }
+.personal-portal .workspace-heading h1 { margin: 0 0 8px; }
+.personal-portal .workspace-heading p { margin: 0; color: var(--ui-muted); font-size: 14px; }
+.personal-portal .skip-link { position: fixed; left: 16px; top: -100px; z-index: 1000; padding: 12px 20px; background: var(--ui-ink); color: #fff; border-radius: 8px; }
+.personal-portal .skip-link:focus { top: 12px; }
+.app-shell.personal-portal > .topbar { height: auto; background: #fff !important; color: var(--ui-ink); box-shadow: none; border-bottom: 1px solid var(--ui-line); backdrop-filter: none; }
+.app-shell.personal-portal > .topbar,
+.app-shell.personal-portal > .topbar .topbar-inner { box-shadow: none !important; }
+.app-shell.personal-portal > .topbar .topbar-inner { width: min(var(--workspace-max),100%); max-width: none; height: 76px; min-height: 76px; padding: 0 var(--workspace-gutter); overflow: visible; gap: 18px; }
+.app-shell.personal-portal .brand { height: auto; min-height: 44px; color: var(--ui-ink); }
+.app-shell.personal-portal .brand-mark { width: 34px; height: 34px; border-radius: 10px; background: var(--ui-brand); color: #fff; box-shadow: none; }
+.app-shell.personal-portal .brand strong { font-size: 18px; font-weight: 650; color: var(--ui-ink); }
+.app-shell.personal-portal .brand small { color: var(--ui-muted); font-family: inherit; font-size: 11px; line-height: 1.5; letter-spacing: .04em; }
+.app-shell.personal-portal .top-nav { display: flex; flex: 1; justify-content: center; align-items: center; gap: 4px; overflow: visible; }
+.app-shell.personal-portal .top-nav :is(button,a) { min-height: 44px; height: auto; padding: 10px 13px; border-radius: 8px; color: var(--ui-muted); background: transparent; font-size: 14px; font-weight: 500; }
+.app-shell.personal-portal .top-nav :is(button,a)::after { display: none; }
+.app-shell.personal-portal .top-nav :is(button,a):is(:hover,.active) { background: var(--ui-tonal); color: var(--ui-brand); }
+.app-shell.personal-portal .top-nav :is(button,a).active { font-weight: 650; }
+.app-shell.personal-portal :is(.location-trigger,.user-trigger) { min-height: 44px; padding: 8px 12px; border-radius: 8px; background: transparent !important; color: var(--ui-muted) !important; border: 1px solid var(--ui-line); box-shadow: none; }
+.app-shell.personal-portal .user-menu { margin-left: 0; flex-shrink: 0; }
+.app-shell.personal-portal .user-trigger svg { color: var(--ui-brand); }
+.personal-portal :is(.primary-btn,.secondary-btn,.reject-btn,.text-btn,.back-btn,.confirm-btn) { min-height: 44px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: none; transform: none; }
+.app-shell.personal-portal .primary-btn { background: var(--ui-brand) !important; color: #fff; border: 1px solid transparent; }
+.app-shell.personal-portal .primary-btn:hover { background: var(--ui-brand-hover) !important; box-shadow: none; }
+.personal-portal :is(.secondary-btn,.confirm-btn) { background: #fff; border: 1px solid var(--ui-line); color: var(--ui-brand); }
+.personal-portal :is(.secondary-btn,.confirm-btn):hover { background: var(--ui-tonal); border-color: #95b7a2; }
+.personal-portal .text-btn { color: var(--ui-brand); background: transparent; gap: 8px; }
+.personal-portal .icon-btn { width: 44px; height: 44px; min-width: 44px; border-radius: 10px; background: var(--ui-tonal); color: var(--ui-brand); }
+.personal-portal .el-select { max-width: 100%; }
+.personal-portal :is(.el-input__wrapper,.el-select__wrapper) { min-height: 44px; border-radius: 10px; background: #fff; box-shadow: 0 0 0 1px var(--ui-line) inset; font-size: 14px; }
+.personal-portal .el-input-number { max-width: 100%; }
+.personal-portal .el-slider__runway { background: var(--ui-tonal); }
+.personal-portal :is(.segmented,.forecast-tabs,.assistant-mode-switch) { background: var(--ui-tonal); padding: 4px; border: 0; border-radius: 10px; box-shadow: none; }
+.personal-portal :is(.segmented,.forecast-tabs,.assistant-mode-switch) button { min-height: 44px; height: auto; border-radius: 7px; font-size: 14px; color: var(--ui-muted); background: transparent; box-shadow: none; }
+.personal-portal :is(.segmented,.forecast-tabs,.assistant-mode-switch) button.active { background: #fff; color: var(--ui-brand); box-shadow: none; }
+.personal-portal .error-text { border: 1px solid #e7cbc6; border-radius: 10px; background: #fff2ef; color: #8c302c; }
+.personal-portal :is(.ui-loading,.forecast-loading,.loading-state) { min-height: 160px; padding: 32px; display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--ui-muted); background: var(--ui-surface); border-radius: 16px; }
+.personal-portal .empty-state { color: var(--ui-muted); padding: 32px 24px; gap: 10px; }
+.personal-portal .empty-state h2 { margin: 8px 0 0; }
+.personal-portal .empty-state p { max-width: 48ch; font-size: 14px; }
+.personal-portal .empty-state svg { color: var(--ui-brand); }
+
+/* Home: a compact starting point and visible evidence in the first viewport. */
+.personal-portal .career-home { margin: 0; width: 100%; }
+/* A shared fluid edge aligns the hero, data panels and navigation. */
+/* Tighten the visible gaps above/below the content, including the carousel's empty track. */
+.app-shell.personal-portal .career-command { min-height: 0 !important; padding: 8px 0 44px !important; }
+.app-shell.personal-portal .career-command .hero-inner { width: 100%; max-width: none; min-height: 300px !important; }
+.app-shell.personal-portal .career-command .hero-scene { min-height: 300px !important; }
+@media (max-width: 860px) {
+  /* Keep the complete arrow hit areas inside the clipped section on small screens. */
+  .app-shell.personal-portal .career-command .hero-carousel-prev { left: 18px; }
+  .app-shell.personal-portal .career-command .hero-carousel-next { right: -18px; }
+}
+@media (min-width: 768px) and (max-width: 860px) {
+  .app-shell.personal-portal .career-command { padding: 4px 0 25px !important; }
+}
+@media (max-width: 767px) {
+  .app-shell.personal-portal .career-command { padding: 0 0 20px !important; }
+  .app-shell.personal-portal .career-command .hero-inner { min-height: 0 !important; }
+  .app-shell.personal-portal .career-command .hero-scene { min-height: 286px !important; }
+}
+.personal-portal .home-intro { display: grid; grid-template-columns: minmax(0,1.7fr) minmax(270px,1fr); gap: 48px; align-items: center; padding: 12px 0 32px; }
+.personal-portal .home-intro-copy { min-width: 0; }
+.personal-portal .home-intro h1 { font-size: 32px; margin: 0 0 12px; }
+.personal-portal .home-intro-copy > p { font-size: 16px; color: var(--ui-muted); margin-bottom: 24px; }
+.personal-portal .home-search { display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 16px; background: #fff; border: 1px solid #a4beb0; }
+.personal-portal .home-search > svg { color: var(--ui-brand); flex-shrink: 0; }
+.personal-portal .home-search input { min-width: 0; flex: 1; height: 44px; border: 0; background: transparent; font-size: 15px; color: var(--ui-ink); }
+.personal-portal .home-search button { flex-shrink: 0; padding: 10px 16px; }
+.personal-portal .home-hot-search { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; color: var(--ui-muted); font-size: 12px; }
+.personal-portal .home-hot-search button { min-height: 36px; padding: 6px 10px; color: var(--ui-brand); background: transparent; border-radius: 6px; }
+.personal-portal .home-hot-search button:hover { background: #deebe1; }
+.personal-portal .target-prompt { padding: 24px; background: var(--ui-tonal); border-radius: 16px; display: grid; }
+.personal-portal .target-prompt-icon { color: var(--ui-brand); }
+.personal-portal .target-prompt h2 { margin: 0; }
+.personal-portal .target-prompt p { margin: 0 0 4px; color: var(--ui-muted); font-size: 13px; }
+.personal-portal .target-prompt label { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .target-prompt .text-btn { justify-content: flex-start; padding: 0; }
+.app-shell.personal-portal .home-surface { width: 100%; margin: 0; padding: 24px 0; border: 0; }
+.personal-portal .surface-heading { margin-bottom: 18px; flex-direction: row; align-items: center; }
+.personal-portal .surface-heading h2 { font-size: 20px; margin: 0; }
+.personal-portal .insight-matrix { display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; }
+.personal-portal .insight-matrix > :is(section,aside) { min-width: 0; border: 1px solid var(--ui-line); border-radius: 16px; box-shadow: none; background: #fff; padding: 22px; }
+.personal-portal .insight-matrix header { padding: 0; border: 0; background: transparent; margin-bottom: 16px; }
+.personal-portal .insight-matrix header h3 { margin: 4px 0 0; font-size: 16px; }
+.personal-portal .insight-matrix header :is(span,em) { color: var(--ui-muted); font-size: 12px; font-style: normal; }
+.personal-portal .insight-matrix header button { min-height: 44px; font-size: 12px; color: var(--ui-brand); }
+.personal-portal .industry-ranking article { min-height: 54px; grid-template-columns: 22px minmax(64px,1fr) minmax(42px,.8fr) 75px 72px; gap: 8px; padding: 8px 0; border-color: #e8efea; }
+.personal-portal .industry-ranking article > b { font-size: 12px; color: var(--ui-muted); font-weight: 400; }
+.personal-portal .industry-ranking strong { font-size: 13px; font-weight: 500; white-space: normal; }
+.personal-portal .industry-ranking article > div { height: 6px; background: var(--ui-tonal); border-radius: 4px; }
+.personal-portal .industry-ranking article > div i { background: var(--ui-brand) !important; border-radius: 4px; }
+.personal-portal .industry-ranking em b { font-family: inherit; font-size: 15px; line-height: 1.4; font-weight: 500; color: var(--ui-ink); }
+.personal-portal .industry-ranking :is(small,.industry-share-change b) { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .occupation-watch { min-height: 270px; }
+.personal-portal .occupation-watch .forecast-chart { height: 200px; }
+.personal-portal .occupation-watch footer { padding: 0; border: 0; font-size: 12px; }
+.personal-portal .occupation-watch .projected { background: var(--ui-brand); }
+.personal-portal .emerging-watch { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 0 20px; min-height: 0; }
+.personal-portal .emerging-watch > header { grid-column: 1 / -1; margin-bottom: 8px; }
+.personal-portal .emerging-watch > button { min-width: 0; min-height: 80px; padding: 12px 0; border: 0; border-bottom: 1px solid var(--ui-line); background: transparent; gap: 10px; }
+.personal-portal .emerging-watch > button:hover { background: var(--ui-ground); }
+.personal-portal .emerging-watch strong { font-size: 14px; color: var(--ui-ink); }
+.personal-portal .emerging-watch small { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .emerging-watch-footer { grid-column: 1 / -1; padding: 8px 0 0; }
+.personal-portal .emerging-watch-footer button { min-height: 44px; color: var(--ui-brand); }
+.personal-portal .skill-radar-strip { margin-top: 24px; border: 0; border-radius: 0; background: transparent; padding: 0; box-shadow: none; }
+.personal-portal .skill-radar-strip > header { padding: 0 0 16px; }
+.personal-portal .skill-radar-strip > header span { display: none; }
+.personal-portal .skill-radar-strip > header h3 { font-size: 18px; margin: 0; }
+.personal-portal .skill-radar-strip > div { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px 24px; background: #fff; padding: 20px; border-radius: 16px; border: 1px solid var(--ui-line); }
+.personal-portal .skill-radar-strip > div > button { min-height: 64px; border: 0 !important; padding: 8px 0; border-radius: 0; background: transparent; grid-template-columns: minmax(72px,1fr) minmax(24px,.5fr) auto; gap: 10px; }
+.personal-portal .skill-radar-strip button strong { font-size: 13px; font-weight: 500; }
+.personal-portal .skill-radar-strip button > i { height: 5px; background: var(--ui-tonal); }
+.personal-portal .skill-radar-strip button > i b { background: var(--ui-brand); }
+.personal-portal .skill-radar-strip em :is(b,small) { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .role-opportunity-list { gap: 16px; grid-template-columns: repeat(3,minmax(0,1fr)); }
+.personal-portal .role-opportunity-list > button { padding: 20px; border: 1px solid var(--ui-line); border-radius: 16px; box-shadow: none; transform: none; background: #fff; }
+.personal-portal .role-opportunity-list > button:hover { background: #fafffb; border-color: #91b3a0; }
+.personal-portal .role-card-heading strong { font-size: 17px; color: var(--ui-ink); }
+.personal-portal .role-card-salary strong { color: var(--ui-brand); font-size: 24px; font-weight: 500; }
+.personal-portal .role-card-skills { display: none; }
+.personal-portal .role-market-summary { margin: 18px 0; }
+.personal-portal .role-market-summary span { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.personal-portal .role-market-summary :is(small,strong,em),.personal-portal .role-opportunity-list footer { font-size: 12px; color: var(--ui-muted); }
+.personal-portal :is(.home-ai-tip,.floating-assistant-tip) { display: none; }
+.personal-portal .home-ai-launcher { position: fixed; right: 20px; bottom: 20px; width: 60px; z-index: 60; }
+.personal-portal .home-ai-launcher-copy { display: none; }
+.personal-portal .home-ai-chat { position: absolute; right: 0; bottom: calc(100% + 12px); width: min(360px,calc(100vw - 32px)); max-height: min(560px,calc(100dvh - 100px)); overflow: auto; border: 1px solid var(--ui-line); border-radius: 14px; background: #fff; box-shadow: 0 12px 32px #244e3224; color: var(--ui-ink); }
+.personal-portal .home-ai-launcher.popup-below .home-ai-chat { top: calc(100% + 12px); bottom: auto; }
+.personal-portal .home-ai-launcher.popup-left .home-ai-chat { left: 0; right: auto; }
+.personal-portal .home-ai-chat-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--ui-line); background: var(--ui-ground); }
+.personal-portal .home-ai-chat-header :is(strong,small) { display: block; }
+.personal-portal .home-ai-chat-header strong { font-size: 14px; }
+.personal-portal .home-ai-chat-header small { font-size: 12px; color: var(--ui-muted); margin-top: 2px; }
+.personal-portal .home-ai-chat-header > button { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 8px; font-size: 24px; color: var(--ui-muted); background: transparent; }
+.personal-portal .home-ai-chat-header > button:hover { background: var(--ui-tonal); }
+.personal-portal .home-ai-chat-messages { max-height: 240px; overflow: auto; overscroll-behavior: contain; padding: 16px; display: grid; gap: 12px; }
+.personal-portal .home-ai-chat-message { display: flex; align-items: flex-start; gap: 8px; }
+.personal-portal .home-ai-chat-message p { margin: 0; padding: 10px 12px; border-radius: 10px; background: var(--ui-ground); color: var(--ui-ink); font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.personal-portal .home-ai-chat-message.user { justify-content: flex-end; }
+.personal-portal .home-ai-chat-message.user p { background: var(--ui-tonal); }
+.personal-portal .home-ai-chat-prompts { display: grid; gap: 6px; padding: 0 16px 12px; }
+.personal-portal .home-ai-chat-prompts button { min-height: 44px; padding: 8px 10px; text-align: left; background: transparent; color: var(--ui-brand); border: 1px solid var(--ui-line); border-radius: 8px; font-size: 12px; }
+.personal-portal .home-ai-chat-prompts button:hover { background: var(--ui-tonal); }
+.personal-portal .home-ai-chat-input { display: flex; align-items: center; gap: 8px; padding: 0 16px 12px; }
+.personal-portal .home-ai-chat-input input { min-width: 0; width: 100%; height: 44px; border: 1px solid var(--ui-line); border-radius: 8px; background: #fff; color: var(--ui-ink); font-size: 13px; padding: 8px 10px; }
+.personal-portal .home-ai-chat-input button { min-height: 44px; flex-shrink: 0; padding: 8px 12px; border-radius: 8px; background: var(--ui-brand); color: #fff; font-size: 13px; }
+.personal-portal .home-ai-chat-input button:disabled { background: var(--ui-tonal); color: var(--ui-muted); }
+.personal-portal .home-ai-chat-full { display: flex; align-items: center; justify-content: center; gap: 8px; width: calc(100% - 32px); margin: 0 16px 16px; min-height: 44px; border-radius: 8px; background: var(--ui-tonal); color: var(--ui-brand); font-size: 13px; }
+.personal-portal :is(.home-ai-chat,.floating-assistant-chat) { overscroll-behavior: contain; }
+.personal-portal .floating-assistant .floating-assistant-chat { overflow: auto; }
+
+/* Explore: subdued catalogue tabs and cards made for comparison. */
+.personal-portal .jobs-page { gap: 20px; }
+.personal-portal .jobs-catalog-switch { display: flex; gap: 8px; border-bottom: 1px solid var(--ui-line); padding-bottom: 12px; }
+.personal-portal .jobs-catalog-switch > button { display: flex; gap: 10px; min-height: 52px; padding: 10px 16px; background: transparent; border: 0; border-radius: 10px; box-shadow: none !important; transform: none; color: var(--ui-muted); }
+.app-shell.personal-portal .jobs-catalog-switch > button.active { background: var(--ui-tonal) !important; color: var(--ui-brand); border: 0 !important; }
+.personal-portal .jobs-catalog-switch > button :is(strong,small) { color: inherit !important; }
+.personal-portal .jobs-catalog-switch > button strong { font-size: 14px; font-weight: 600; }
+.personal-portal .jobs-catalog-switch > button small { font-size: 12px; margin: 0; }
+.personal-portal .jobs-catalog-switch > button > svg:first-child { width: 20px; height: 20px; padding: 0; color: inherit !important; background: transparent !important; }
+.personal-portal .jobs-catalog-switch > button > svg:last-child { display: none; }
+.personal-portal .jobs-filter-shell { padding: 20px; border: 1px solid var(--ui-line); background: #fff; }
+.personal-portal .jobs-filter-primary { flex-wrap: wrap; gap: 12px; }
+.personal-portal .jobs-search { height: auto; min-height: 48px; background: var(--ui-ground); border: 1px solid var(--ui-line); border-radius: 10px; }
+.personal-portal .jobs-search input { height: 44px; font-size: 14px; }
+.personal-portal .jobs-filter-advanced { gap: 16px; margin-top: 20px; border-top: 1px solid var(--ui-line); padding-top: 20px; }
+.personal-portal :is(.result-count,.filter-warning,.compact-select > span) { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .job-card-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.personal-portal .job-card { border: 1px solid var(--ui-line); border-radius: 16px; box-shadow: none; overflow: visible; background: #fff; }
+.personal-portal .job-card:hover { box-shadow: none; border-color: #91b3a0; transform: none; }
+.personal-portal .job-card-open { width: 100%; min-width: 0; padding: 22px; display: block; background: transparent; }
+.personal-portal .job-card-main { min-width: 0; }
+.personal-portal .job-card-title h2 { font-size: 18px; margin: 6px 0; line-height: 1.5; }
+.personal-portal .job-card-title > span { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .job-card-heading { gap: 12px; padding-right: 32px; align-items: flex-start; }
+.personal-portal .job-card-salary strong { color: var(--ui-brand); font-size: 26px; font-weight: 500; }
+.personal-portal .job-card-salary > svg { display: none; }
+.personal-portal .job-card-salary small { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .job-card-meta { gap: 8px 16px; margin: 16px 0; font-size: 12px; color: var(--ui-muted); }
+.personal-portal :is(.job-card-skills > span,.context-skills > span,.signal-skill-groups em) { background: var(--ui-tonal); color: #3c5d4b; border-radius: 6px; padding: 4px 8px; font-size: 12px; }
+.personal-portal .job-card-signal { margin-top: 18px; padding-top: 14px; border: 0; border-top: 1px solid #e8efea; display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: auto; }
+.personal-portal .job-card-signal > small { color: var(--ui-muted); font-size: 12px; }
+.personal-portal .job-card-signal > svg { display: none; }
+.personal-portal .job-favorite-button { top: 16px; right: 12px; min-width: 44px; min-height: 44px; background: transparent; color: var(--ui-muted); }
+.personal-portal .job-favorite-button.active { color: var(--ui-brand); }
+.personal-portal .trend-badge { font-size: 12px; padding: 4px 8px; border-radius: 6px; }
+.personal-portal .job-pagination { padding: 16px 0; font-size: 12px; flex-wrap: wrap; gap: 12px; }
+.personal-portal .emerging-lab { border: 0; background: transparent; }
+.personal-portal .emerging-intro { padding: 4px 0 20px; border: 0; background: transparent; }
+.personal-portal .emerging-intro p { font-size: 13px; color: var(--ui-muted); max-width: 60ch; }
+.personal-portal .emerging-intro > div:last-child { gap: 14px; font-size: 12px; }
+.personal-portal .emerging-grid { padding: 0; gap: 20px; grid-template-columns: repeat(3,minmax(0,1fr)); }
+.personal-portal .emerging-grid > article { padding: 22px; border: 1px solid var(--ui-line); border-radius: 16px; background: #fff; box-shadow: none; }
+.personal-portal .emerging-grid > article > header small { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .emerging-title-button { color: var(--ui-ink); font-size: 18px; min-height: 44px; line-height: 1.4; }
+.personal-portal .emerging-grid > article > p { font-size: 13px; line-height: 1.8; color: var(--ui-muted); }
+.personal-portal .emerging-grid :is(dt,section > span,footer span) { font-size: 12px; }
+.personal-portal .emerging-grid dd { font-size: 15px; font-weight: 500; color: var(--ui-ink); }
+.personal-portal .emerging-grid section em { padding: 4px 8px; font-size: 12px; background: var(--ui-tonal); color: #3c5d4b; border-radius: 6px; }
+.personal-portal .emerging-grid footer { flex-wrap: wrap; gap: 8px; }
+.personal-portal .emerging-grid footer button { min-height: 44px; font-size: 13px; color: var(--ui-brand); }
+
+/* Conversation: readable transcript, compact context, discoverable next action. */
+.app-shell.personal-portal .assistant-workbench { display: grid; grid-template-columns: 280px minmax(0,1fr); gap: 20px; height: max(600px,calc(100dvh - 240px)); min-height: 600px; background: transparent; border: 0; overflow: visible; }
+.app-shell.personal-portal .assistant-workbench :is(.assistant-sidebar,.chat-panel) { box-shadow: none; }
+.personal-portal .assistant-sidebar { min-width: 0; padding: 20px; background: var(--ui-tonal); border: 0; border-radius: 16px; gap: 20px; overflow: auto; }
+.personal-portal .assistant-identity { padding: 0; border: 0; display: flex; gap: 12px; align-items: center; background: transparent; }
+.personal-portal .assistant-service-icon { display: grid; place-items: center; color: var(--ui-brand); }
+.personal-portal .assistant-identity-status { border: 0; padding: 0; background: transparent; box-shadow: none; }
+.personal-portal .assistant-identity-status strong { font-size: 13px; }
+.personal-portal .assistant-identity-status small { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .assistant-context { padding: 0; background: transparent; border: 0; }
+.personal-portal .assistant-mode-switch-row { display: block; }
+.personal-portal .assistant-mode-switch { display: grid; gap: 4px; background: transparent; padding: 0; }
+.personal-portal .assistant-mode-switch button { width: 100%; justify-content: flex-start; gap: 8px; padding: 10px; font-size: 13px; white-space: normal; }
+.personal-portal .assistant-mode-dot { display: none; }
+.personal-portal .assistant-agent-info { display: none; }
+.personal-portal .assistant-role { background: transparent; padding: 16px 0; border: 0; border-bottom: 1px solid var(--ui-line); }
+.personal-portal .assistant-role small { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .assistant-role strong { font-size: 14px; }
+.personal-portal .assistant-history { min-width: 0; padding: 0; border: 0; }
+.personal-portal .assistant-history header { gap: 8px; }
+.personal-portal .assistant-history header :is(button,span) { font-size: 12px; }
+.personal-portal .history-list { min-width: 0; padding: 0; }
+.personal-portal .history-row { border-radius: 8px; min-width: 0; }
+.personal-portal .history-row.active { background: #d5e6da; }
+.personal-portal .history-copy strong { font-size: 13px; }
+.personal-portal .history-copy small { font-size: 12px; }
+.personal-portal .history-actions { opacity: 1; }
+.personal-portal .history-actions button { min-width: 36px; min-height: 36px; }
+.personal-portal .chat-panel { background: #fff; border: 1px solid var(--ui-line); border-radius: 16px; min-width: 0; overflow: hidden; }
+.personal-portal .chat-head { padding: 16px 22px; background: #fff; border-color: var(--ui-line); }
+.personal-portal .chat-head strong { font-size: 15px; }
+.personal-portal .chat-head small { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .chat-head-icon { background: var(--ui-tonal); color: var(--ui-brand); border-radius: 10px; }
+.personal-portal .messages { min-height: 180px; padding: 24px; scroll-behavior: smooth; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #b4cbb9 transparent; }
+.personal-portal .empty-chat { min-height: 210px; padding: 24px 0; gap: 10px; }
+.personal-portal .empty-chat > span { background: transparent; box-shadow: none; color: var(--ui-brand); }
+.personal-portal .empty-chat h2 { font-size: 20px; margin: 0; }
+.personal-portal .empty-chat :is(p,small) { font-size: 13px; line-height: 1.8; color: var(--ui-muted); }
+.personal-portal .message { gap: 12px; margin-bottom: 24px; }
+.personal-portal .message > div { max-width: min(68ch,90%); border-radius: 12px; font-size: 14px; line-height: 1.8; color: var(--ui-ink); background: var(--ui-ground); box-shadow: none; }
+.personal-portal .message.user > div { background: var(--ui-tonal); color: var(--ui-ink); }
+.personal-portal .message p { overflow-wrap: anywhere; }
+.personal-portal .message details { font-size: 12px; }
+.personal-portal .message summary { min-height: 36px; padding-top: 8px; cursor: pointer; color: var(--ui-brand); }
+.personal-portal .chat-recommendations { padding: 12px 22px; border-top: 1px solid #e8efea; background: #fff; }
+.personal-portal .chat-recommendations > span { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .question-list { gap: 8px; }
+.personal-portal .question-list button { min-height: 44px; font-size: 12px; background: var(--ui-ground); border: 0; color: var(--ui-brand); border-radius: 8px; padding: 8px 12px; text-align: left; white-space: normal; }
+.personal-portal .chat-input { margin: 0 22px; padding: 10px; border: 1px solid #a4beb0; border-radius: 12px; background: #fff; box-shadow: none; align-items: flex-end; }
+.personal-portal .chat-input textarea { resize: vertical; min-height: 56px; max-height: 180px; font-size: 14px; color: var(--ui-ink); background: transparent; padding: 4px; }
+.personal-portal .composer-hint { padding: 10px 22px 14px; margin: 0; color: var(--ui-muted); font-size: 12px; line-height: 1.6; }
+.personal-portal .composer-hint a { color: var(--ui-brand); text-decoration: underline; text-underline-offset: 3px; }
+.personal-portal .mobile-history-toggle { display: none; }
+
+/* Graph: controls and evidence are peers, never an obscuring overlay. */
+.personal-portal .graph-workspace { min-height: 0; border: 0; background: transparent; }
+.personal-portal .graph-control-bar { padding: 20px; border: 1px solid var(--ui-line); border-radius: 16px; background: #fff; flex-wrap: wrap; gap: 16px; }
+.personal-portal .graph-control-bar :is(label,legend,.graph-query > span) { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .graph-query { min-width: 180px; flex: 1; }
+.personal-portal .graph-query .inline-search { min-width: 0; border: 1px solid var(--ui-line); border-radius: 10px; height: 44px; background: #fff; }
+.personal-portal .graph-filter-summary { padding: 16px 0; gap: 10px; background: transparent; font-size: 12px; flex-wrap: wrap; }
+.personal-portal .graph-filter-summary p { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .graph-interaction-guide { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 12px; }
+.personal-portal .graph-interaction-guide p { margin: 0; color: var(--ui-muted); font-size: 13px; }
+.personal-portal .graph-interaction-guide label { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--ui-muted); }
+.personal-portal .graph-interaction-guide select { min-height: 44px; max-width: 240px; padding: 8px 12px; border: 1px solid var(--ui-line); border-radius: 10px; color: var(--ui-ink); background: #fff; }
+.personal-portal .graph-stage { display: grid; grid-template-columns: minmax(0,1fr); height: 560px; background: #fff; border: 1px solid var(--ui-line); border-radius: 16px; overflow: hidden; }
+.personal-portal .graph-stage.has-detail { grid-template-columns: minmax(0,1fr) 300px; }
+.personal-portal .graph-visualization { position: relative; min-width: 0; height: 100%; }
+.personal-portal .graph-chart { width: 100%; height: 100%; }
+.personal-portal .canvas-controls { position: absolute; top: 54px; right: 16px; display: grid; gap: 6px; z-index: 2; }
+.personal-portal .canvas-controls button { background: #fff; border: 1px solid var(--ui-line); color: var(--ui-brand); }
+.personal-portal .canvas-controls output { text-align: center; font-size: 12px; color: var(--ui-muted); }
+.personal-portal .entity-drawer { position: static; width: auto; min-width: 0; height: 100%; max-height: none; border: 0; border-left: 1px solid var(--ui-line); border-radius: 0; background: #f9fcfa; box-shadow: none; padding: 22px; overflow: auto; }
+.personal-portal .entity-drawer h2 { font-size: 20px; }
+.personal-portal .entity-drawer :is(p,dt,dd) { font-size: 13px; overflow-wrap: anywhere; }
+.personal-portal .entity-view-guide { background: var(--ui-tonal); border: 0; border-radius: 10px; }
+
+/* Forecast: the selected story leads, rank navigation stays secondary. */
+.personal-portal .forecast-workspace { gap: 20px; }
+.personal-portal .forecast-commandbar { gap: 20px; padding: 20px; background: #fff; border: 1px solid var(--ui-line); border-radius: 16px; flex-wrap: wrap; }
+.personal-portal .forecast-tabs { display: flex; }
+.personal-portal .forecast-tabs button { min-width: 120px; padding: 10px 14px; }
+.personal-portal .forecast-parameters { display: flex; flex-wrap: wrap; gap: 16px; }
+.personal-portal .forecast-parameters label { width: 140px; }
+.personal-portal .forecast-parameters :is(label > span,.forecast-export-action > span) { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .forecast-layout { grid-template-columns: 280px minmax(0,1fr); gap: 20px; }
+.personal-portal .forecast-selector { border: 1px solid var(--ui-line); border-radius: 16px; background: #fff; overflow: auto; max-height: 780px; }
+.personal-portal .forecast-selector > header { padding: 22px 20px; border-color: var(--ui-line); background: transparent; }
+.personal-portal .forecast-selector header h2 { margin: 0 0 8px; }
+.personal-portal .forecast-selector header p { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .forecast-selector > button { min-height: 76px; background: transparent; border: 0; border-bottom: 1px solid #e8efea; padding: 14px 16px; gap: 10px; }
+.personal-portal .forecast-selector > button.active { background: var(--ui-tonal); box-shadow: none; border-left: 0; }
+.personal-portal .forecast-selector > button :is(b,small,em) { font-size: 12px; color: var(--ui-muted); font-style: normal; }
+.personal-portal .forecast-selector > button strong { font-size: 14px; color: var(--ui-ink); }
+.personal-portal .forecast-detail { padding: 24px; border: 1px solid var(--ui-line); border-radius: 16px; background: #fff; min-width: 0; }
+.personal-portal .forecast-detail-head { gap: 16px; flex-wrap: wrap; }
+.personal-portal .forecast-detail-head h2 { margin: 0 0 8px; font-size: 22px; }
+.personal-portal .forecast-detail-head p { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .forecast-detail-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.personal-portal .forecast-metrics { grid-template-columns: repeat(3,minmax(0,1fr)); padding: 20px 0; margin: 20px 0; background: var(--ui-ground); border-radius: 12px; }
+.personal-portal .forecast-metrics article { padding: 0 20px; border-right: 1px solid var(--ui-line); background: transparent; }
+.personal-portal .forecast-metrics article:last-child { border: 0; }
+.personal-portal .forecast-metrics strong { color: var(--ui-ink); font-size: 28px; font-weight: 400; }
+.personal-portal .forecast-metrics :is(small,span) { color: var(--ui-muted); font-size: 12px; }
+.personal-portal .forecast-chart-panel { padding: 0; border: 0; background: #fff; }
+.personal-portal .forecast-chart-panel > header { padding: 0 0 16px; }
+.personal-portal .forecast-chart-panel header small { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .forecast-interpretation { border: 0; background: var(--ui-tonal); padding: 16px; border-radius: 10px; font-size: 13px; }
+.personal-portal .forecast-interpretation p { color: var(--ui-muted); }
+.personal-portal .forecast-chart { height: 300px; min-width: 0; }
+.personal-portal .chart-legend { display: flex; flex-wrap: wrap; gap: 18px; font-size: 12px; color: var(--ui-muted); margin: 12px 0 4px; }
+.personal-portal .chart-legend span { display: flex; gap: 6px; align-items: center; }
+.personal-portal .chart-legend i { width: 20px; height: 0; border-top: 2px solid var(--ui-brand); }
+.personal-portal .chart-legend .forecast-line { border-top-style: dashed; }
+.personal-portal .chart-legend .range-line { border-top: 1px dotted #748f80; }
+.personal-portal .chart-data { margin-top: 12px; color: var(--ui-muted); font-size: 12px; }
+.personal-portal .chart-data summary { min-height: 44px; display: list-item; align-content: center; cursor: pointer; color: var(--ui-brand); }
+.personal-portal .chart-data > div { max-height: 260px; overflow: auto; }
+.personal-portal .chart-data table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+.personal-portal .chart-data :is(td,th) { padding: 8px; border-bottom: 1px solid var(--ui-line); white-space: nowrap; }
+.personal-portal .mobile-forecast-picker { display: none; }
+
+/* Diagnosis: progressive input with a clear next step. */
+.personal-portal .diagnosis-layout { grid-template-columns: 360px minmax(0,1fr); gap: 24px; align-items: start; }
+.personal-portal .profile-input { padding: 24px; gap: 16px; }
+.personal-portal .profile-input .panel-head { padding: 0 0 16px; background: transparent; border-color: var(--ui-line); }
+.personal-portal .profile-input .panel-head h2 { margin-top: 0; }
+.personal-portal .profile-input .panel-head p { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .diagnosis-target { display: grid; gap: 8px; margin-top: 4px; }
+.personal-portal .field-label { font-size: 13px; color: var(--ui-ink); font-weight: 500; }
+.personal-portal .profile-step { margin: 8px 0 0; font-size: 13px; }
+.personal-portal .upload-zone { background: var(--ui-ground); border: 1px dashed #9ab5a3; border-radius: 12px; padding: 24px 16px; min-height: 160px; }
+.personal-portal .upload-zone strong { font-size: 14px; color: var(--ui-ink); }
+.personal-portal .upload-zone span { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .upload-zone b { background: var(--ui-tonal); color: var(--ui-brand); padding: 8px 12px; font-size: 13px; border-radius: 8px; }
+.personal-portal .skill-editor { border: 1px solid var(--ui-line); border-radius: 10px; background: #fff; padding: 8px; min-height: 80px; }
+.personal-portal .skill-editor > span { background: var(--ui-tonal); color: var(--ui-brand); border-radius: 6px; font-size: 13px; }
+.personal-portal .skill-editor input { min-height: 44px; font-size: 14px; max-width: 100%; }
+.personal-portal :is(.field-hint,.diagnosis-hint) { margin: 0; color: var(--ui-muted); font-size: 12px; line-height: 1.7; }
+.personal-portal .two-fields { gap: 12px; }
+.personal-portal .two-fields label > span { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .optional-assessment { padding: 12px 0; border-block: 1px solid var(--ui-line); }
+.personal-portal .optional-assessment summary { cursor: pointer; font-size: 13px; min-height: 44px; align-content: center; }
+.personal-portal .optional-assessment summary > span { display: block; font-size: 12px; color: var(--ui-muted); }
+.personal-portal .workstyle-self-assessment { border: 0; background: transparent; padding: 12px 0; }
+.personal-portal .workstyle-self-assessment header { display: none; }
+.personal-portal .workstyle-self-assessment label span { font-size: 13px; }
+.personal-portal input[type=range] { min-height: 28px; accent-color: var(--ui-brand); }
+.personal-portal .match-result { min-width: 0; padding: 24px; border: 1px solid var(--ui-line); background: #fff; }
+.personal-portal .diagnosis-empty { align-items: flex-start; text-align: left; min-height: 380px; padding: 24px; }
+.personal-portal .diagnosis-empty h2 { font-size: 22px; }
+.personal-portal .diagnosis-empty ol { padding-left: 22px; margin: 16px 0; display: grid; gap: 16px; font-size: 14px; color: var(--ui-ink); }
+.personal-portal .diagnosis-empty small { font-size: 12px; }
+.personal-portal .score-head { background: transparent; color: var(--ui-ink); border-bottom: 1px solid var(--ui-line); padding: 0 0 24px; gap: 24px; }
+.personal-portal .score-head p { color: var(--ui-muted); font-size: 13px; }
+.personal-portal .score-summary { display: grid; gap: 0; min-width: 100px; }
+.personal-portal .score-summary strong { color: var(--ui-brand); font-size: 48px; font-weight: 400; line-height: 1.2; }
+.personal-portal .score-summary span { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .dimension-row { gap: 12px; margin: 24px 0; }
+.personal-portal .dimension-row > div { background: var(--ui-ground); border: 0; border-radius: 10px; padding: 16px; }
+.personal-portal .dimension-row b { font-size: 24px; font-weight: 400; color: var(--ui-ink); }
+.personal-portal .dimension-row :is(span,small) { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .capability-radar-section { background: transparent; padding: 0; border: 0; }
+.personal-portal .capability-radar-section header p { font-size: 13px; color: var(--ui-muted); }
+.personal-portal .capability-analysis-body { grid-template-columns: 1fr; }
+.personal-portal .gap-columns { gap: 20px; }
+.personal-portal .gap-columns article { font-size: 13px; padding: 8px 0; background: transparent; border: 0; }
+.personal-portal .result-context-grid { grid-template-columns: 1fr; margin-top: 24px; }
+.personal-portal .result-context-grid > article { padding: 16px 0; border: 0; border-top: 1px solid var(--ui-line); border-radius: 0; background: transparent; }
+.personal-portal .report-actions { gap: 10px; padding: 20px 0; flex-wrap: wrap; }
+.personal-portal .learning-track > article { border-color: var(--ui-line); }
+
+/* Responsive composition; no clipped navigation or inherited minimum canvas widths. */
+/* Wide workspaces use their canvas without stretching reading columns. */
+@media (min-width: 1500px) {
+  .app-shell.personal-portal .job-card-list { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
+  .app-shell.personal-portal .assistant-workbench { grid-template-columns: 300px minmax(0,1fr); gap: 24px; }
+  .app-shell.personal-portal .forecast-layout { grid-template-columns: 320px minmax(0,1fr); gap: 24px; }
+  .app-shell.personal-portal .diagnosis-layout { grid-template-columns: minmax(380px,.72fr) minmax(0,1.28fr); gap: 28px; }
+  .app-shell.personal-portal .graph-stage { height: clamp(600px,65vh,800px); }
+  .app-shell.personal-portal .graph-stage.has-detail { grid-template-columns: minmax(0,1fr) 340px; }
+  .app-shell.personal-portal .forecast-detail .forecast-chart { height: 340px; }
+}
+
+@media (max-width: 1200px) {
+  .app-shell.personal-portal { --workspace-gutter: 6%; }
+  .app-shell.personal-portal > .topbar .topbar-inner { flex-wrap: wrap; height: auto; padding: 12px 24px 8px; gap: 8px 16px; }
+  .app-shell.personal-portal .brand { flex: 1; }
+  .app-shell.personal-portal .top-nav { display: flex; flex: 1 0 100%; order: 4; width: 100%; justify-content: flex-start; overflow-x: auto; scrollbar-width: thin; }
+  .app-shell.personal-portal .top-nav :is(button,a) { flex: 0 0 auto; }
+  .personal-portal .emerging-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .personal-portal .role-opportunity-list { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .personal-portal .skill-radar-strip > div { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .personal-portal .forecast-commandbar { display: grid; }
+  .personal-portal .diagnosis-layout { grid-template-columns: 320px minmax(0,1fr); gap: 20px; }
+}
+@media (max-width: 900px) {
+  .personal-portal .home-intro { grid-template-columns: 1.4fr 1fr; gap: 24px; }
+  .personal-portal .insight-matrix { grid-template-columns: 1fr; }
+  .personal-portal .emerging-watch { grid-template-columns: 1fr; }
+  .personal-portal .forecast-layout { grid-template-columns: 230px minmax(0,1fr); }
+  .personal-portal .forecast-detail { padding: 20px; }
+  .personal-portal .forecast-metrics article { padding: 0 12px; }
+  .personal-portal .forecast-metrics strong { font-size: 23px; }
+  .personal-portal .diagnosis-layout { grid-template-columns: 1fr; }
+  .personal-portal .profile-input { display: grid; grid-template-columns: 1fr; }
+  .app-shell.personal-portal .assistant-workbench { grid-template-columns: 240px minmax(0,1fr); gap: 16px; height: 700px; }
+  .personal-portal .assistant-sidebar { padding: 16px; }
+  .personal-portal .graph-stage.has-detail { grid-template-columns: minmax(0,1fr) 260px; }
+}
+@media (max-width: 640px) {
+  .app-shell.personal-portal > main { padding: 24px 16px 80px; }
+  .app-shell.personal-portal > .topbar .topbar-inner { padding: 10px 16px 6px; gap: 8px; height: auto; min-height: 104px; overflow: visible; }
+  .app-shell.personal-portal .brand { min-width: 0; gap: 8px; }
+  .app-shell.personal-portal .brand > span:last-child { display: flex; }
+  .app-shell.personal-portal .brand strong { font-size: 17px; }
+  .app-shell.personal-portal .brand small { display: none; }
+  .app-shell.personal-portal .brand-mark { width: 30px; height: 30px; }
+  .app-shell.personal-portal .location-trigger { padding: 8px; gap: 5px; min-width: 68px; }
+  .app-shell.personal-portal .location-trigger span { display: inline; max-width: 48px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .app-shell.personal-portal .user-trigger { width: 44px; padding: 10px; gap: 0; }
+  .app-shell.personal-portal .user-trigger > span,.app-shell.personal-portal .user-trigger > svg:last-child { display: none; }
+  .app-shell.personal-portal .user-trigger > svg:first-child { display: block; flex-shrink: 0; }
+  .app-shell.personal-portal .top-nav { width: 100%; min-width: 0; gap: 4px; padding-bottom: 4px; }
+  .app-shell.personal-portal .top-nav :is(button,a) { min-width: auto; padding: 10px 12px; font-size: 13px; }
+  .app-shell.personal-portal .top-nav :is(button,a) svg { display: none; }
+  .personal-portal h1 { font-size: 24px; }
+  .personal-portal .workspace-heading p { font-size: 13px; }
+  .personal-portal .home-intro { grid-template-columns: 1fr; gap: 24px; padding: 0 0 8px; }
+  .personal-portal .home-intro h1 { font-size: 28px; }
+  .personal-portal .home-intro-copy > p { font-size: 14px; margin-bottom: 20px; }
+  .personal-portal .home-search { gap: 8px; padding-left: 12px; }
+  .personal-portal .home-search input { font-size: 13px; }
+  .personal-portal .home-search button { padding: 8px 12px; font-size: 13px; }
+  .personal-portal .home-search button svg { display: none; }
+  .personal-portal .target-prompt { padding: 20px; grid-template-columns: 1fr; }
+  .personal-portal .target-prompt-icon { display: none; }
+  .personal-portal .surface-heading h2 { font-size: 18px; }
+  .personal-portal .insight-matrix > :is(section,aside) { padding: 18px; }
+  .personal-portal .industry-ranking article { grid-template-columns: 18px minmax(66px,1fr) 38px 64px 60px; gap: 6px; }
+  .personal-portal .industry-ranking strong { font-size: 12px; }
+  .personal-portal .industry-ranking em b { font-size: 13px; }
+  .personal-portal .industry-share-change > span { display: none; }
+  .personal-portal .skill-radar-strip > div { grid-template-columns: 1fr; padding: 18px; }
+  .personal-portal .role-opportunity-list,.personal-portal .job-card-list,.personal-portal .emerging-grid { grid-template-columns: 1fr; }
+  .personal-portal .surface-heading { gap: 12px; flex-wrap: wrap; }
+  .personal-portal .jobs-catalog-switch { gap: 4px; }
+  .personal-portal .jobs-catalog-switch > button { flex: 1; min-width: 0; padding: 10px 8px; gap: 8px; }
+  .personal-portal .jobs-catalog-switch > button small { display: none; }
+  .personal-portal .jobs-filter-shell { padding: 16px; }
+  .personal-portal .jobs-filter-primary { display: flex; flex-wrap: wrap; }
+  .personal-portal .jobs-search { width: 100%; flex: 1 0 100%; min-width: 0; }
+  .personal-portal .compact-select { flex: 1; min-width: 0; }
+  .personal-portal .jobs-filter-advanced { grid-template-columns: 1fr; }
+  .personal-portal .job-card-open { padding: 20px 16px; }
+  .personal-portal .job-card-heading { padding-right: 24px; }
+  .personal-portal .job-card-title h2 { font-size: 17px; }
+  .personal-portal .job-card-salary strong { font-size: 24px; }
+  .personal-portal .emerging-intro { gap: 16px; }
+  .personal-portal .emerging-grid > article { padding: 20px; }
+  .app-shell.personal-portal .assistant-workbench { display: flex; flex-direction: column; height: auto; min-height: 0; gap: 16px; }
+  .personal-portal .assistant-sidebar { padding: 16px; min-width: 0; width: 100%; height: auto; overflow: visible; display: flex; flex-direction: column; gap: 12px; }
+  .personal-portal .assistant-identity { display: none; }
+  .personal-portal .assistant-mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .personal-portal .assistant-mode-switch button { padding: 10px 8px; font-size: 12px; }
+  .personal-portal .assistant-role { padding: 8px 0 0; border: 0; }
+  .personal-portal .mobile-history-toggle { display: flex; width: 100%; min-height: 44px; order: 2; background: transparent; }
+  .personal-portal .assistant-history { display: none; max-height: 320px; overflow: auto; order: 3; }
+  .personal-portal .assistant-history.mobile-open { display: block; }
+  .personal-portal .history-actions button { min-width: 44px; min-height: 44px; }
+  .personal-portal .chat-panel { min-height: 550px; height: min(740px,95dvh); width: 100%; }
+  .personal-portal .chat-head { padding: 14px 16px; }
+  .personal-portal .chat-head small { font-size: 12px; }
+  .personal-portal .messages { padding: 16px; }
+  .personal-portal .empty-chat { min-height: 160px; }
+  .personal-portal .empty-chat h2 { font-size: 18px; }
+  .personal-portal .chat-recommendations { padding: 12px 16px; }
+  .personal-portal .question-list { display: flex; flex-wrap: nowrap; overflow: auto; padding-bottom: 4px; }
+  .personal-portal .question-list button { flex: 0 0 190px; }
+  .personal-portal .chat-input { margin: 0 16px; }
+  .personal-portal .chat-input button { padding: 8px 12px; }
+  .personal-portal .composer-hint { padding: 10px 16px; }
+  .personal-portal .graph-control-bar { padding: 16px; gap: 16px; display: grid; grid-template-columns: 1fr; }
+  .personal-portal .graph-mode-switch { width: 100%; display: flex; }
+  .personal-portal .graph-mode-switch button { min-width: 0; padding: 10px; flex: 1; font-size: 12px; }
+  .personal-portal .graph-filter { width: 100%; }
+  .personal-portal .graph-tier-filter .segmented { flex-wrap: wrap; }
+  .personal-portal .graph-toolbar-actions { justify-content: flex-end; }
+  .personal-portal .graph-interaction-guide { flex-direction: column; align-items: stretch; gap: 10px; }
+  .personal-portal .graph-interaction-guide label { justify-content: space-between; }
+  .personal-portal .graph-stage { height: 460px; }
+  .personal-portal .graph-stage.has-detail { height: auto; min-height: 460px; grid-template-columns: 1fr; }
+  .personal-portal .graph-stage.has-detail .graph-visualization { height: 400px; }
+  .personal-portal .entity-drawer { border: 0; border-top: 1px solid var(--ui-line); max-height: 480px; }
+  .personal-portal .forecast-commandbar { padding: 16px; gap: 16px; }
+  .personal-portal .forecast-tabs button { min-width: 0; flex: 1; }
+  .personal-portal .forecast-parameters { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+  .personal-portal .forecast-parameters label { width: auto; min-width: 0; }
+  .personal-portal .forecast-parameters .segmented button { padding: 8px 10px; flex: 1; }
+  .personal-portal .forecast-layout { grid-template-columns: 1fr; }
+  .personal-portal .forecast-selector { max-height: 250px; }
+  .personal-portal .mobile-forecast-picker { display: block; padding: 16px; }
+  .personal-portal .mobile-forecast-picker summary { cursor: pointer; min-height: 28px; font-size: 14px; color: var(--ui-brand); }
+  .personal-portal .forecast-selector:has(.mobile-forecast-picker:not([open])) > :not(.mobile-forecast-picker) { display: none; }
+  .personal-portal .forecast-selector > header { padding: 0 16px 16px; }
+  .personal-portal .forecast-detail { padding: 20px 16px; }
+  .personal-portal .forecast-detail-head .primary-btn,.personal-portal .forecast-detail-head .secondary-btn { width: auto; }
+  .personal-portal .forecast-metrics { margin: 16px 0; padding: 16px 0; }
+  .personal-portal .forecast-metrics article { border-bottom: 0; padding: 0 10px; }
+  .personal-portal .forecast-metrics strong { font-size: 23px; }
+  .personal-portal .forecast-metrics :is(small,span) { font-size: 12px; }
+  .personal-portal .forecast-chart { height: 260px; }
+  .personal-portal .profile-input,.personal-portal .match-result { padding: 20px; }
+  .personal-portal .diagnosis-empty { padding: 12px 0; min-height: 320px; }
+  .personal-portal .score-head { flex-wrap: wrap; }
+  .personal-portal .dimension-row { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .personal-portal .capability-radar-wrap { min-width: 0; }
+  .personal-portal .report-actions > button { flex: 1 1 45%; }
+  .personal-portal .home-ai-launcher { right: 16px; bottom: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .personal-portal *, .personal-portal *::before, .personal-portal *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* Refinements discovered in the rendered states. */
+.personal-portal :is(h1,h2,h3) { font-weight: 600 !important; }
+.personal-portal p { text-wrap: pretty; }
+.personal-portal .brand strong { color: var(--ui-brand) !important; }
+.personal-portal .surface-heading h2 { padding-left: 0; border: 0; }
+.personal-portal .surface-heading h2::before { display: none; }
+.personal-portal :is(.market-pulse,.occupation-watch) { min-height: 0; }
+.personal-portal .industry-ranking { padding: 0; margin-top: 8px; }
+.personal-portal .industry-ranking article { min-width: 0; width: 100%; }
+.personal-portal .industry-ranking :is(em,small,strong) { min-width: 0; }
+.personal-portal .industry-ranking .industry-share-change b { font-size: 12px; }
+.personal-portal .occupation-watch footer i.projected { border-top-color: var(--ui-brand); }
+.personal-portal .target-prompt { gap: 8px; }
+.personal-portal .target-prompt .target-prompt-icon { display: none; }
+.personal-portal .home-search { border-radius: 16px; }
+.personal-portal .home-search .primary-btn { border-radius: 10px; }
+.personal-portal .radar-values { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; font-size: 12px; padding: 8px 0; }
+.personal-portal .radar-values dt { color: var(--ui-ink); }.personal-portal .radar-values dd { margin: 0; color: var(--ui-muted); }
+.personal-portal .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.personal-portal .assistant-sidebar { grid-template-rows: none; }
+.personal-portal .assistant-identity-status { display: flex; align-items: center; gap: 8px; }
+.personal-portal .assistant-identity-status :is(strong,small) { display: block; }
+.personal-portal .history-copy :is(strong,small) { color: var(--ui-muted); }
+.personal-portal .history-row.active :is(strong,small) { color: var(--ui-ink); }
+.personal-portal .history-select { font-size: 13px; }
+.personal-portal .assistant-context { overflow: visible; min-height: 0; }
+.personal-portal .assistant-role { display: flex; gap: 10px; align-items: center; }
+.personal-portal .assistant-role :is(strong,small) { display: block; }
+.personal-portal .assistant-role .evidence-mode { display: none; }
+.personal-portal .chat-input:focus-within,.personal-portal .home-search:focus-within { border-color: var(--ui-brand); }
+.personal-portal .chat-input textarea:focus { box-shadow: none; }
+.personal-portal .question-list button:enabled:hover { background: var(--ui-tonal); }
+.personal-portal .question-list button:disabled { opacity: .6; }
+.personal-portal .message > div { padding: 14px 16px; }
+.personal-portal .history-rename { display: flex; gap: 4px; min-width: 0; }
+.personal-portal .history-rename input { min-width: 0; max-width: 100%; }
+.personal-portal .history-rename button { min-width: 40px; min-height: 40px; }
+.personal-portal .floating-assistant { width: 60px; min-height: 60px; z-index: 60; }
+.app-shell.personal-portal :is(.floating-assistant-button,.home-ai-launcher-button) { display: grid; place-items: center; width: 60px; min-width: 60px; height: 60px; min-height: 60px; padding: 4px; border-radius: 20px; background: #f4fcf7; border: 1px solid #afcfbe; color: var(--ui-brand); box-shadow: 0 4px 16px #244e321c; cursor: grab; touch-action: none; }
+.app-shell.personal-portal :is(.floating-assistant-button,.home-ai-launcher-button):hover { background: #e6f5ed; border-color: #689e86; }
+.app-shell.personal-portal :is(.floating-assistant-button,.home-ai-launcher-button):focus-visible { outline: 2px solid var(--ui-brand); outline-offset: 4px; }
+.personal-portal .floating-assistant .floating-assistant-tip { display: none; }
+.app-shell.personal-portal :is(.floating-assistant-button,.home-ai-launcher-button) .assistant-robot-scene { --assistant-size: 50px; display: grid; }
+.app-shell.personal-portal :is(.floating-assistant-button,.home-ai-launcher-button)::after { content: none; }
+.app-shell.personal-portal :is(.assistant-service-icon,.chat-head-icon,.history-dot,.home-ai-chat-avatar,.floating-assistant-avatar,.message.assistant > span) { display: grid; place-items: center; flex-shrink: 0; background: transparent; padding: 0; }
+.app-shell.personal-portal .assistant-service-icon { width: 44px; height: 44px; }
+.app-shell.personal-portal .assistant-service-icon .assistant-robot-scene { --assistant-size: 44px; }
+.app-shell.personal-portal :is(.chat-head-icon,.message.assistant > span) .assistant-robot-scene { --assistant-size: 34px; }
+.app-shell.personal-portal .history-dot .assistant-robot-scene { --assistant-size: 24px; }
+.app-shell.personal-portal :is(.home-ai-chat-avatar,.floating-assistant-avatar) .assistant-robot-scene { --assistant-size: 28px; }
+.personal-portal .floating-assistant :is(.floating-assistant-input button,.floating-assistant-full,.floating-assistant-prompts button,.floating-assistant-chat>header>button) { min-height: 44px; font-size: 13px; }
+.personal-portal .upload-zone input[type=file] { position: absolute; display: block; opacity: 0; width: 1px; height: 1px; overflow: hidden; }
+.personal-portal .upload-zone:focus-within { outline: 2px solid var(--ui-brand); outline-offset: 3px; }
+.personal-portal .skill-editor span button { min-width: 32px; min-height: 32px; }
+@media (pointer: coarse) {
+  .personal-portal .skill-editor > span { height: 44px; }
+  .personal-portal .skill-editor span button { min-width: 44px; min-height: 44px; }
+}
+@media(max-width:640px) {
+  .personal-portal .assistant-sidebar .assistant-history { display: none; }
+  .personal-portal .assistant-sidebar .assistant-history.mobile-open { display: flex; }
+  .personal-portal .assistant-history { min-height: 0; }
+  .personal-portal .assistant-sidebar { max-height: none; }
+  .personal-portal .assistant-context { padding: 0; }
+  .personal-portal .radar-values { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .personal-portal .chat-input .primary-btn { font-size: 13px; }
+}
+
+.personal-portal .topbar .brand small { font-size: 12px; line-height: 1.5; color: var(--ui-muted); font-family: inherit; letter-spacing: .01em; }
+.personal-portal .top-nav a { display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; text-decoration: none; }
+.personal-portal .message details :is(small,b,a) { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .message details a { color: var(--ui-brand); }
+.personal-portal :is(.history-dot,.chat-head-icon,.assistant-role > svg) { background: transparent; color: var(--ui-brand); }
+.personal-portal .history-heading { color: var(--ui-muted); font-size: 12px; margin: 12px 0; }
+.personal-portal .history-dot { border-radius: 0; box-shadow: none; }
+.app-shell.personal-portal small { font-size: 12px; }
+.app-shell.personal-portal .emerging-intro > div:last-child > span { font-size: 12px; color: var(--ui-muted); }
+.app-shell.personal-portal .emerging-grid dt { color: var(--ui-muted); }
+.app-shell.personal-portal .occupation-watch footer { color: var(--ui-muted); }
+.app-shell.personal-portal .home-ai-launcher-button { color: #fff; }
+.app-shell.personal-portal .skill-radar-strip .skill-index-unit { font-size: 12px; }
+.app-shell.personal-portal .role-card-salary small { color: var(--ui-muted); }
+.app-shell.personal-portal :is(.role-card-heading,.role-card-salary,.industry-ranking em,.industry-share-change b,.skill-radar-strip em) { font-family: inherit; }
+.app-shell.personal-portal .role-opportunity-list > button { min-height: 0; }
+.app-shell.personal-portal .role-opportunity-list .role-card-heading { min-height: 0; }
+.personal-portal :is(.el-select,.el-input,.el-input-number) { font-family: inherit; }
+.personal-portal :is(h1,h2,h3,[id]) { scroll-margin-top: 144px; }
+.personal-portal .job-card-skills { flex-wrap: wrap; }
+.personal-portal :is(.emerging-title-button,.job-card-title h2,.role-card-heading strong,.source-url-row) { overflow-wrap: anywhere; }
+.personal-portal .skill-insight-rail { background: #fff; border: 1px solid var(--ui-line); border-radius: 16px; box-shadow: none; }
+.personal-portal .skill-evolution-grid { gap: 20px; }
+.personal-portal .skill-evolution-main { min-width: 0; }
+.personal-portal .trend-panel { overflow: hidden; }
+.personal-portal .trend-panel .panel-head { padding: 22px; background: transparent; border-color: var(--ui-line); }
+.personal-portal .skill-forecast-detail { padding: 24px; }
+.personal-portal .skill-ranking button { min-height: 72px; }
+.personal-portal .skill-ranking button.active { border-left: 0; background: var(--ui-tonal); }
+.personal-portal .skill-ranking :is(b,small,em) { font-size: 12px; color: var(--ui-muted); }
+.personal-portal .skill-ranking strong { font-size: 14px; }
+.personal-portal .forecast-drivers { background: var(--ui-ground); border: 0; border-radius: 10px; }
+.personal-portal .forecast-drivers :is(small,span) { font-size: 12px; color: var(--ui-muted); }
+.career-drawer.el-drawer { color: #203b33; font-family: system-ui,"Microsoft YaHei UI",sans-serif; --el-color-primary: #176b5b; }
+.career-drawer .el-drawer__body { padding: 24px; overscroll-behavior: contain; }
+.career-drawer .section-code { display: none; }
+.career-drawer .icon-btn { min-width: 44px; min-height: 44px; }
+.career-drawer :is(h2,h3) { font-family: inherit !important; }
+.career-drawer :is(small,dt,.signal-status) { font-size: 12px; color: #586c62; }
+.career-drawer .signal-evidence-row p { overflow-wrap: anywhere; }
+/* Keep readable labels above legacy component-specific declarations. */
+.app-shell.personal-portal .forecast-tabs button.active,
+.app-shell.personal-portal .forecast-tabs button.active > :is(span,svg) { color: var(--ui-brand) !important; background: #fff; }
+.app-shell.personal-portal .forecast-detail > .forecast-metrics article:nth-child(2) strong { color: var(--ui-brand); }
+.app-shell.personal-portal .forecast-chart-panel > header > span { font-size: 12px; color: var(--ui-warning); background: #f5ebda; }
+.app-shell.personal-portal .forecast-interpretation :is(strong,p) { font-size: 13px; color: var(--ui-muted); }
+.app-shell.personal-portal .emerging-watch-footer > button,
+.app-shell.personal-portal .role-opportunity-list .role-field,
+.app-shell.personal-portal .jobs-filter-advanced label > span { font-size: 13px; }
+.app-shell.personal-portal .role-opportunity-list .role-card-skills { display: none; }
+.app-shell.personal-portal .role-card-skills :is(span,b,small,i,em) { font-size: 12px; }
+.app-shell.personal-portal .emerging-grid section > span { color: var(--ui-muted); }
+.app-shell.personal-portal .match-result { min-height: 0; }
+.app-shell.personal-portal .icon-btn { background: transparent; }
+.app-shell.personal-portal .icon-btn:enabled:hover { background: var(--ui-tonal); }
+.app-shell.personal-portal .jobs-search > button { flex-shrink: 0; white-space: nowrap; min-width: 64px; }
+.app-shell.personal-portal .forecast-selector { align-self: stretch; }
+.app-shell.personal-portal .forecast-selector .forecast-occupation-list { max-height: none; }
+@media (max-width:640px) {
+  .personal-portal .topbar .brand small { display: none; }
+  .personal-portal .assistant-sidebar { gap: 8px; padding: 12px; }
+  .personal-portal .assistant-role { padding: 0; margin: 0; }
+  .personal-portal .assistant-role > span { display: none; }
+  .personal-portal .assistant-role small { display: none; }
+  .personal-portal .assistant-mode-switch { padding: 0; }
+  .personal-portal .chat-panel { min-height: 500px; height: 620px; }
+  .personal-portal .skill-evolution-grid { grid-template-columns: 1fr; }
+  .personal-portal .skill-forecast-detail { padding: 20px 16px; }
+  .personal-portal .skill-insight-rail { order: -1; max-height: 260px; overflow: auto; }
+  .personal-portal .trend-chart-summary { display: none; }
+  .personal-portal > main { padding-bottom: max(80px,env(safe-area-inset-bottom)); }
+}

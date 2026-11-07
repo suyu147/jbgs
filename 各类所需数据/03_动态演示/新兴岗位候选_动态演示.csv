@@ -1,0 +1,10 @@
+﻿job_title_canonical,job_category,first_seen_month,latest_seen_month,posting_count,source_count,novelty_keywords,novelty_signal_count,candidate_reason,human_review_required,candidate_only,governance_version
+半导体设备工程师,工业互联网/物联网/集成电路,2026-05,2026-07,11,3,半导体,1,recent_first_seen_multi_source_minimum_5_postings_plus_emerging_term,true,true,20260720-v01
+网络安全专家,网络与数据安全/运维合规,2026-02,2026-07,9,2,网络安全,1,recent_first_seen_multi_source_minimum_5_postings_plus_emerging_term,true,true,20260720-v01
+芯片ATE测试,工业互联网/物联网/集成电路,2026-05,2026-07,7,2,芯片,1,recent_first_seen_multi_source_minimum_5_postings_plus_emerging_term,true,true,20260720-v01
+AI技术专家,工业互联网/物联网/集成电路,2026-04,2026-07,6,3,ai,1,recent_first_seen_multi_source_minimum_5_postings_plus_emerging_term,true,true,20260720-v01
+销售总监(汽车工业互联网),工业互联网/物联网/集成电路,2026-05,2026-07,6,2,工业互联网,1,recent_first_seen_multi_source_minimum_5_postings_plus_emerging_term,true,true,20260720-v01
+工业互联网平台负责人,工业互联网/物联网/集成电路,2026-07,2026-07,5,2,工业互联网,1,recent_first_seen_multi_source_minimum_5_postings_plus_emerging_term,true,true,20260720-v01
+数据安全主任工程师,网络与数据安全/运维合规,2026-04,2026-07,5,2,数据安全,1,recent_first_seen_multi_source_minimum_5_postings_plus_emerging_term,true,true,20260720-v01
+机器学习实习生,人工智能/大数据/云计算,2026-04,2026-07,5,2,机器学习,1,recent_first_seen_multi_source_minimum_5_postings_plus_emerging_term,true,true,20260720-v01
+算法研发工程师,人工智能/大数据/云计算,2026-06,2026-07,5,2,算法,1,recent_first_seen_multi_source_minimum_5_postings_plus_emerging_term,true,true,20260720-v01

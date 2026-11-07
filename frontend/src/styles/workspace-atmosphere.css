@@ -1,0 +1,180 @@
+/* The login canvas is the shared brand reference for every workspace. */
+:root {
+  --career-atmosphere:
+    radial-gradient(ellipse 47% 76% at 8% 82%, rgba(204, 234, 215, .55), transparent 76%),
+    radial-gradient(ellipse 36% 47% at 38% 4%, rgba(225, 239, 215, .5), transparent 75%),
+    radial-gradient(ellipse 54% 75% at 98% 10%, #eff8ff, transparent 78%),
+    radial-gradient(ellipse 44% 37% at 67% 98%, rgba(184, 220, 237, .55), transparent 78%),
+    linear-gradient(113deg, #edf6e9, #edf7f4 53%, #eff7ff);
+}
+
+.app-shell.personal-portal,
+.enterprise-shell.enterprise-shell,
+.admin-shell.admin-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--career-atmosphere) !important;
+  background-attachment: fixed !important;
+}
+
+.app-shell.personal-portal::before,
+.enterprise-shell.enterprise-shell::before,
+.admin-shell.admin-shell::before {
+  content: '';
+  position: fixed;
+  z-index: -2;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 55% 70% at 58% 18%, rgba(251, 255, 245, .65), transparent 76%);
+}
+
+.app-shell.personal-portal::after,
+.enterprise-shell.enterprise-shell::after,
+.admin-shell.admin-shell::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: url('../assets/login-background-pattern.svg') center / cover no-repeat;
+  opacity: .9;
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, .62), rgba(0, 0, 0, .38) 22%, rgba(0, 0, 0, .45) 42%, #000 72%);
+}
+
+/* One continuous canvas beneath the content, including long scrolling pages. */
+.app-shell.personal-portal > main,
+.app-shell.personal-portal :is(.page-content, .page-heading, .career-home),
+.enterprise-shell.enterprise-shell > main,
+.enterprise-shell.enterprise-shell .enterprise-content,
+.admin-shell.admin-shell > .admin-main,
+.admin-shell.admin-shell .admin-content {
+  background: transparent !important;
+}
+
+.app-shell.personal-portal > .topbar,
+.enterprise-shell.enterprise-shell .enterprise-topbar,
+.admin-shell.admin-shell .admin-topbar {
+  background: rgba(255, 255, 255, .88) !important;
+}
+
+/* Keep the personal portal navigation flush to the viewport while using one
+   continuous glass surface instead of a floating inset panel. */
+.app-shell.personal-portal > .topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 76px;
+  margin: 0;
+  background: rgba(235, 248, 245, .58) !important;
+  border-bottom: 1px solid rgba(113, 157, 150, .2) !important;
+  box-shadow: 0 6px 20px rgba(53, 101, 94, .07) !important;
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+.app-shell.personal-portal > .topbar .topbar-inner {
+  height: 76px;
+  min-height: 76px;
+  margin: 0 auto;
+  padding: 0 var(--workspace-gutter);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.app-shell.personal-portal > .topbar .topbar-inner::before { display: none; }
+.app-shell.personal-portal > .topbar .top-nav :is(a, button) {
+  position: relative;
+  isolation: isolate;
+  min-height: 44px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .12);
+  color: #536d67;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22);
+  backdrop-filter: blur(8px) saturate(125%);
+  -webkit-backdrop-filter: blur(8px) saturate(125%);
+  transition: background-color .22s ease, border-color .22s ease, color .22s ease, box-shadow .22s ease, transform .22s ease;
+}
+.app-shell.personal-portal > .topbar .top-nav :is(a, button)::before {
+  position: absolute;
+  z-index: -1;
+  inset: 1px 20% auto;
+  height: 1px;
+  content: '';
+  background: rgba(255, 255, 255, .48);
+  opacity: .45;
+  transition: opacity .22s ease;
+}
+.app-shell.personal-portal > .topbar .top-nav :is(a, button):is(:hover, :focus-visible) {
+  border-color: rgba(255, 255, 255, .72);
+  background: rgba(255, 255, 255, .42);
+  color: #176b5b;
+  box-shadow: 0 4px 12px rgba(47, 101, 91, .08), inset 0 1px 0 rgba(255, 255, 255, .72);
+  transform: translateY(-1px);
+}
+.app-shell.personal-portal > .topbar .top-nav :is(a, button):is(:hover, :focus-visible)::before { opacity: 1; }
+.app-shell.personal-portal > .topbar .top-nav :is(a, button).active {
+  border-color: rgba(255, 255, 255, .82);
+  background: rgba(255, 255, 255, .58);
+  color: #116d5d;
+  box-shadow: 0 3px 12px rgba(47, 101, 91, .1), inset 0 1px 0 rgba(255, 255, 255, .85), inset 0 -1px 0 rgba(28, 138, 117, .12);
+}
+.app-shell.personal-portal > .topbar .top-nav :is(a, button).active::before { opacity: .9; }
+.app-shell.personal-portal > .topbar .top-nav :is(a, button):active { transform: scale(.98); }
+.app-shell.personal-portal > .topbar .top-nav :is(a, button) svg { transition: transform .22s ease, color .22s ease; }
+.app-shell.personal-portal > .topbar .top-nav :is(a, button):is(:hover, .active) svg { transform: translateY(-1px); }
+@media (prefers-reduced-motion: reduce) {
+  .app-shell.personal-portal > .topbar .top-nav :is(a, button),
+  .app-shell.personal-portal > .topbar .top-nav :is(a, button) svg { transition: none; }
+}
+@media (max-width: 1200px) {
+  .app-shell.personal-portal > .topbar { height: auto; }
+  .app-shell.personal-portal > .topbar .topbar-inner {
+    height: auto;
+    padding-top: 8px;
+    padding-bottom: 6px;
+  }
+  .app-shell.personal-portal > .topbar .top-nav {
+    flex: 1 1 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+    min-height: 50px;
+    padding: 3px 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .app-shell.personal-portal > .topbar .top-nav::-webkit-scrollbar { display: none; }
+  .app-shell.personal-portal > .topbar .top-nav :is(a, button) { flex: 0 0 auto; }
+}
+@media (max-width: 760px) {
+  .app-shell.personal-portal > .topbar { height: auto; min-height: 76px; }
+  .app-shell.personal-portal > .topbar .topbar-inner {
+    height: auto;
+    min-height: 76px;
+    margin: 0;
+    padding: 10px 16px 6px;
+    border: 0;
+    border-radius: 0;
+  }
+}
+
+.app-shell.personal-portal :is(.market-pulse, .occupation-watch, .emerging-watch, .skill-radar-strip, .panel, .jobs-filter-shell, .emerging-lab, .forecast-detail, .forecast-selector) {
+  background-color: rgba(255, 255, 255, .94);
+}
+
+@media (max-width: 640px) {
+  .app-shell.personal-portal::after,
+  .enterprise-shell.enterprise-shell::after,
+  .admin-shell.admin-shell::after {
+    background-size: auto max(900px, 100svh);
+    background-position: 43% top;
+    opacity: .7;
+  }
+}

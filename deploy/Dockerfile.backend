@@ -1,0 +1,15 @@
+FROM python:3.12-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /app/backend
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/ ./
+COPY demo-data/ /app/demo-data/
+COPY 各类所需数据/ /app/各类所需数据/
+COPY 应用数据/quality/ /app/应用数据/quality/
+RUN useradd --create-home --uid 10001 career \
+    && mkdir -p /app/应用数据/uploads /app/应用数据/reports /app/应用数据/logs /app/应用数据/derived /app/应用数据/backups \
+    && chown -R career:career /app
+USER career
+EXPOSE 8010
+CMD ["sh", "-c", "python -m alembic upgrade head && exec python -m uvicorn app.main:app --host 0.0.0.0 --port 8010"]

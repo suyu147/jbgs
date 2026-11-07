@@ -1,0 +1,536 @@
+{
+  "version": "20260720-v01",
+  "generated_at": "2026-07-20T10:00:19+08:00",
+  "files": [
+    {
+      "layer": "标准化",
+      "file_name": "第一类招聘数据_标准化.csv",
+      "relative_path": "01_标准化\\第一类招聘数据_标准化.csv",
+      "file_type": "csv",
+      "size_bytes": 195570880,
+      "row_count": 20014,
+      "sha256": "e077152a54e32c7839cf8954f530038e00c560b8edc98745cb9e4004440e34da",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "标准化",
+      "file_name": "第三类职业标准_标准化.csv",
+      "relative_path": "01_标准化\\第三类职业标准_标准化.csv",
+      "file_type": "csv",
+      "size_bytes": 102926,
+      "row_count": 7,
+      "sha256": "5690428b4eeeaeb55497b19c9818aaece1d6ea3e9ce7b9f463fcdadec754f03b",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "标准化",
+      "file_name": "第三类职业要求_标准化.csv",
+      "relative_path": "01_标准化\\第三类职业要求_标准化.csv",
+      "file_type": "csv",
+      "size_bytes": 180434,
+      "row_count": 210,
+      "sha256": "1859fa351d916753f32752873fb6732b1549c2f651d6b91194b59c3ad2717eee",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "标准化",
+      "file_name": "第二类技能词库_标准化.csv",
+      "relative_path": "01_标准化\\第二类技能词库_标准化.csv",
+      "file_type": "csv",
+      "size_bytes": 12078945,
+      "row_count": 3695,
+      "sha256": "3c3801a92edaa511cc58733dcd0e672f89a148ece306f3458801bbb20e4b376a",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "标准化",
+      "file_name": "第五类证书实体_标准化.csv",
+      "relative_path": "01_标准化\\第五类证书实体_标准化.csv",
+      "file_type": "csv",
+      "size_bytes": 1023347,
+      "row_count": 208,
+      "sha256": "ff8aa09d8a06b693555d43d24b99577c6781f5efd8a577965dc937bcf794da93",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "标准化",
+      "file_name": "第六类行业报告_标准化.csv",
+      "relative_path": "01_标准化\\第六类行业报告_标准化.csv",
+      "file_type": "csv",
+      "size_bytes": 2583555,
+      "row_count": 138,
+      "sha256": "648611f30c42416bce1a1293933f8d4896e4979cdeb6a7d0b274be1b60c53b18",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "标准化",
+      "file_name": "第六类趋势信号_标准化.csv",
+      "relative_path": "01_标准化\\第六类趋势信号_标准化.csv",
+      "file_type": "csv",
+      "size_bytes": 1358880,
+      "row_count": 734,
+      "sha256": "bce341af247aa0c5c834529b43f6e95853911aa3dfa48a9cf7de77ca84827b7d",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "标准化",
+      "file_name": "第四类专业实体_标准化.csv",
+      "relative_path": "01_标准化\\第四类专业实体_标准化.csv",
+      "file_type": "csv",
+      "size_bytes": 9423,
+      "row_count": 16,
+      "sha256": "088e3135ff134f2020fa327757bb5c472464db956d6f0dd0de3ead7411d86fe0",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "标准化",
+      "file_name": "第四类课程实体_标准化.csv",
+      "relative_path": "01_标准化\\第四类课程实体_标准化.csv",
+      "file_type": "csv",
+      "size_bytes": 11741591,
+      "row_count": 788,
+      "sha256": "4f4a022c8d666767fa862bae6a4ed2ff718ce9924f1a700cfaedd2d8b0dd7449",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "专业实体_归一化.csv",
+      "relative_path": "02_归一化\\专业实体_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 3951,
+      "row_count": 16,
+      "sha256": "2c3837306831893eb51f8fe96ac667d805483660a7f5dfe4870772f3fa9fa8fc",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "岗位实体_归一化.csv",
+      "relative_path": "02_归一化\\岗位实体_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 7664532,
+      "row_count": 20014,
+      "sha256": "57f69bf95c8f1c1141de3fde3ee8ce7828a0611a1192cbea7de7dc7f6f97e015",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "岗位技能关系_归一化.csv",
+      "relative_path": "02_归一化\\岗位技能关系_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 70366707,
+      "row_count": 50610,
+      "sha256": "2230a3d5e958bc8fe3b82079ca01c32d3802a60afde9abbb567c461ebf038a4b",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "技能实体_归一化.csv",
+      "relative_path": "02_归一化\\技能实体_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 4482609,
+      "row_count": 3695,
+      "sha256": "e6cf6c1f740020590de87a62363625e49ef7763d8f1eadaa31bda6e7d79c52d4",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "技能层级关系_归一化.csv",
+      "relative_path": "02_归一化\\技能层级关系_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 190256,
+      "row_count": 437,
+      "sha256": "9377602d15ae1d4b3d18cfa8b779bb5cdf1167a5c945043eb223f6ac47d7ffa0",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "报告趋势主题关系_归一化.csv",
+      "relative_path": "02_归一化\\报告趋势主题关系_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 748435,
+      "row_count": 489,
+      "sha256": "c50705c0a37da31ac3afde623bb9cfd6b59dcdd2bbad271df2e69be9252dd19f",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "报告趋势信号关系_归一化.csv",
+      "relative_path": "02_归一化\\报告趋势信号关系_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 582800,
+      "row_count": 734,
+      "sha256": "7df0538eac46c99725b4435ce643de099e0f0708903b0bf61a70ae0312411b17",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "职业标准实体_归一化.csv",
+      "relative_path": "02_归一化\\职业标准实体_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 9929,
+      "row_count": 7,
+      "sha256": "48c9c1e13e97a4e182fb9da64c50f95d7bb093f27e9e061dda0d8eddfea89edd",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "职业标准要求关系_归一化.csv",
+      "relative_path": "02_归一化\\职业标准要求关系_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 59933,
+      "row_count": 210,
+      "sha256": "0719cf31eee2a6210847298a2515b0465278423d2bbf85f8b3ded14ec0840491",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "职业要求实体_归一化.csv",
+      "relative_path": "02_归一化\\职业要求实体_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 83354,
+      "row_count": 210,
+      "sha256": "8c7380a0b3c047ffe3c5ca323fa955e8b9e06552ef658d2fe2340df8dbde557f",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "证书实体_归一化.csv",
+      "relative_path": "02_归一化\\证书实体_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 94825,
+      "row_count": 208,
+      "sha256": "ef10613f4ec586f5673c2723767d2685a7338b04fc9ca758ffe5bba9bf6100f9",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "证书技能关系_归一化.csv",
+      "relative_path": "02_归一化\\证书技能关系_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 813328,
+      "row_count": 361,
+      "sha256": "963a267f38922ba4e38cd5bbd786c95e7b34a9bbfdc9b48eb6760252daeaa250",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "课程专业关系_归一化.csv",
+      "relative_path": "02_归一化\\课程专业关系_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 143232,
+      "row_count": 48,
+      "sha256": "817a14692a4cca60e5554b44b4a3630e88b6b225052b47d94cc217aa51a1868a",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "课程实体_归一化.csv",
+      "relative_path": "02_归一化\\课程实体_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 1145196,
+      "row_count": 788,
+      "sha256": "3f5ca70f7ee1955101ea8010d1378351ba4d184af3934bad5897d0caca193aa5",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "课程技能关系_归一化.csv",
+      "relative_path": "02_归一化\\课程技能关系_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 2375819,
+      "row_count": 2008,
+      "sha256": "91d5c0c57a164d070bda99d7d99da6d45333ac88d604f2a5196afa0d859702f1",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "趋势主题实体_归一化.csv",
+      "relative_path": "02_归一化\\趋势主题实体_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 4004,
+      "row_count": 18,
+      "sha256": "9597503b883c83d13655f6d7d89289f4519f9c10486a2d366284e001bcd1bbfa",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "趋势信号实体_归一化.csv",
+      "relative_path": "02_归一化\\趋势信号实体_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 656809,
+      "row_count": 734,
+      "sha256": "7a0bb466e48aee2abcf284a80fc7bf47370e760283a9fc1b0cb2b3171b96cc22",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "趋势技能关系_归一化.csv",
+      "relative_path": "02_归一化\\趋势技能关系_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 500539,
+      "row_count": 245,
+      "sha256": "f674103aec806fc66954ea93f8f286eacd242c3acc7cc6f96fc5c17b9194e3bb",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "归一化",
+      "file_name": "趋势报告实体_归一化.csv",
+      "relative_path": "02_归一化\\趋势报告实体_归一化.csv",
+      "file_type": "csv",
+      "size_bytes": 323114,
+      "row_count": 138,
+      "sha256": "472be1f191768b9b7f742bb7cd5918a52e9ba8a4e94ef9b2cf4d6fd306a00002",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "动态演示",
+      "file_name": "岗位技能变化事件_动态演示.csv",
+      "relative_path": "03_动态演示\\岗位技能变化事件_动态演示.csv",
+      "file_type": "csv",
+      "size_bytes": 225637,
+      "row_count": 1378,
+      "sha256": "35a911185fba7b8827a6a0cff559e1d72c27f322ad6a0c7a9118edf34d2b486a",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "动态演示",
+      "file_name": "岗位技能年度趋势_动态演示.csv",
+      "relative_path": "03_动态演示\\岗位技能年度趋势_动态演示.csv",
+      "file_type": "csv",
+      "size_bytes": 154005,
+      "row_count": 1385,
+      "sha256": "b70185ce0e0c14f36ed4ce32aa64f89336b1809fcc459b6dc8eb2edef7b41cdd",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "动态演示",
+      "file_name": "岗位技能月度趋势_动态演示.csv",
+      "relative_path": "03_动态演示\\岗位技能月度趋势_动态演示.csv",
+      "file_type": "csv",
+      "size_bytes": 541323,
+      "row_count": 4792,
+      "sha256": "8eacf578eeb7710ed9631789132efbd1d58c42d7223275c85501a63f0bb020fb",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "动态演示",
+      "file_name": "岗位类别月度规模_动态演示.csv",
+      "relative_path": "03_动态演示\\岗位类别月度规模_动态演示.csv",
+      "file_type": "csv",
+      "size_bytes": 19242,
+      "row_count": 289,
+      "sha256": "d6b8b5e1f25bf604199561baf09262ac9d5893b565ca7d88b9a6c7929cd95d24",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "动态演示",
+      "file_name": "新兴岗位候选_动态演示.csv",
+      "relative_path": "03_动态演示\\新兴岗位候选_动态演示.csv",
+      "file_type": "csv",
+      "size_bytes": 1889,
+      "row_count": 9,
+      "sha256": "9452b999adf10f23fd5acbd92db0a0bc3a714e6b3904d785f9e60cb625c25fa7",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "动态演示",
+      "file_name": "既有岗位技能变化候选_动态演示.csv",
+      "relative_path": "03_动态演示\\既有岗位技能变化候选_动态演示.csv",
+      "file_type": "csv",
+      "size_bytes": 16036,
+      "row_count": 73,
+      "sha256": "f51d95c37c3bdd23e0c7220f5bcacef262d8c654e582d753f3c0a83ebdc9fac0",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "动态演示",
+      "file_name": "趋势主题时间线_动态演示.csv",
+      "relative_path": "03_动态演示\\趋势主题时间线_动态演示.csv",
+      "file_type": "csv",
+      "size_bytes": 14795,
+      "row_count": 220,
+      "sha256": "e2feaccb62dd1450626208c5c8887cf0911bf3a643604bbf141d433dd997ccc7",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "JSON",
+      "file_name": "动态演示摘要.json",
+      "relative_path": "04_JSON\\动态演示摘要.json",
+      "file_type": "json",
+      "size_bytes": 33039,
+      "row_count": "",
+      "sha256": "0d610fff6727c3db6e0f83b257f3f8c4b6adbdd31e7707a59b28e5db984813f5",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "JSON",
+      "file_name": "图谱关系.jsonl",
+      "relative_path": "04_JSON\\图谱关系.jsonl",
+      "file_type": "jsonl",
+      "size_bytes": 112049623,
+      "row_count": "",
+      "sha256": "0549a89f2546ad9c3f4cc9dec5790f57cb44a5d56cdf9e4542e48b1c8e2ecd04",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "JSON",
+      "file_name": "图谱节点.jsonl",
+      "relative_path": "04_JSON\\图谱节点.jsonl",
+      "file_type": "jsonl",
+      "size_bytes": 28042884,
+      "row_count": "",
+      "sha256": "e90ed105619239a65465f15efe29170734fc9fdddda73ac22f546fdbbe9463a0",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "JSON",
+      "file_name": "治理质量摘要.json",
+      "relative_path": "04_JSON\\治理质量摘要.json",
+      "file_type": "json",
+      "size_bytes": 5722,
+      "row_count": "",
+      "sha256": "06229fc14e6f483eafb5c7e9e16ce050ee575929b2f747a06abf46aa101b3c06",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "说明文档",
+      "file_name": "01_JD实体技能抽取提示词.md",
+      "relative_path": "05_说明文档\\01_JD实体技能抽取提示词.md",
+      "file_type": "md",
+      "size_bytes": 1102,
+      "row_count": "",
+      "sha256": "5d05e0934a87453e30e978ccea10033d4aefded703fca199d6a834d5be13e3a3",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "说明文档",
+      "file_name": "02_新岗位发现与定义提示词.md",
+      "relative_path": "05_说明文档\\02_新岗位发现与定义提示词.md",
+      "file_type": "md",
+      "size_bytes": 872,
+      "row_count": "",
+      "sha256": "6a0c483005e2e315fda6f83861b8ad992982fe3eaaa064d3c85936aaed57eeec",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "说明文档",
+      "file_name": "03_既有岗位能力更新提示词.md",
+      "relative_path": "05_说明文档\\03_既有岗位能力更新提示词.md",
+      "file_type": "md",
+      "size_bytes": 772,
+      "row_count": "",
+      "sha256": "5e407bd4e8e82f2dde5fe5ae39a44efca9f8d58c1a829034a7dab42e64f84a0c",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "说明文档",
+      "file_name": "04_简历技能抽取与人岗匹配提示词.md",
+      "relative_path": "05_说明文档\\04_简历技能抽取与人岗匹配提示词.md",
+      "file_type": "md",
+      "size_bytes": 840,
+      "row_count": "",
+      "sha256": "710486c1e44577b692ec681b7e08b7600a653935db7e514175c17d74c57cb273",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "说明文档",
+      "file_name": "字段说明.csv",
+      "relative_path": "05_说明文档\\字段说明.csv",
+      "file_type": "csv",
+      "size_bytes": 111331,
+      "row_count": 878,
+      "sha256": "7ee11b2105d8b4b9f688259c3e54e137e85f2e7b7a035820ee07f9ecaf693df9",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "说明文档",
+      "file_name": "字段说明.md",
+      "relative_path": "05_说明文档\\字段说明.md",
+      "file_type": "md",
+      "size_bytes": 706,
+      "row_count": "",
+      "sha256": "5ca35487ab21f31af23ec823e961ad91c4722882d1eb64b2440acdf6ad68d561",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "说明文档",
+      "file_name": "运行说明.md",
+      "relative_path": "05_说明文档\\运行说明.md",
+      "file_type": "md",
+      "size_bytes": 1754,
+      "row_count": "",
+      "sha256": "06a8e9c4ebbf69b6a1dfb543f92b4f768fb30be1335d19fea93c9020ed519e1c",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "质量与清单",
+      "file_name": "数据质量报告.md",
+      "relative_path": "06_质量与清单\\数据质量报告.md",
+      "file_type": "md",
+      "size_bytes": 2264,
+      "row_count": "",
+      "sha256": "fa579723b77e54a3925f8ff577bc6cd72877436d16d3b35b5f073affe3610701",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "质量与清单",
+      "file_name": "数据质量指标.csv",
+      "relative_path": "06_质量与清单\\数据质量指标.csv",
+      "file_type": "csv",
+      "size_bytes": 8049,
+      "row_count": 108,
+      "sha256": "bc4ef020f559284cd9b0b08275dc371e54491541629944740bdd0a32cd781e0b",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "质量与清单",
+      "file_name": "独立校验结果.json",
+      "relative_path": "06_质量与清单\\独立校验结果.json",
+      "file_type": "json",
+      "size_bytes": 21526,
+      "row_count": "",
+      "sha256": "be5a998b01985ba71078a0c93438ad40498875d619503b15533f7388438b8028",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "质量与清单",
+      "file_name": "独立校验结果.md",
+      "relative_path": "06_质量与清单\\独立校验结果.md",
+      "file_type": "md",
+      "size_bytes": 168,
+      "row_count": "",
+      "sha256": "abc27978e828ce60c3715d38ea96e5994591deaa1d20afdf6d26cf55d2d8bc25",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "运行文件",
+      "file_name": "README.md",
+      "relative_path": "README.md",
+      "file_type": "md",
+      "size_bytes": 532,
+      "row_count": "",
+      "sha256": "a7b4ef81fb988e83965f2dd3eb776c58dc08a778cde7587c4fcf79912e58381f",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "运行文件",
+      "file_name": "run_pipeline.py",
+      "relative_path": "scripts\\run_pipeline.py",
+      "file_type": "py",
+      "size_bytes": 65677,
+      "row_count": "",
+      "sha256": "5fdf6e6b7b276dbae3d401568357cb434a0e22b03f70f53a80a215acd1796779",
+      "governance_version": "20260720-v01"
+    },
+    {
+      "layer": "运行文件",
+      "file_name": "validate_delivery.py",
+      "relative_path": "scripts\\validate_delivery.py",
+      "file_type": "py",
+      "size_bytes": 8013,
+      "row_count": "",
+      "sha256": "1f12da4a98ae8e554bfa4db60099280739bdcdeb1ec39f1c09dd2c253013b126",
+      "governance_version": "20260720-v01"
+    }
+  ]
+}

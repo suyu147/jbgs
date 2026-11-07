@@ -1,0 +1,53 @@
+{
+  "release_date": "2026-11-02",
+  "frontend_clean_install_build": "passed",
+  "backend_clean_venv_tests": {
+    "passed": 77,
+    "failed": 0
+  },
+  "three_portal_logins": [
+    {
+      "portal": "personal",
+      "username": "demo_user",
+      "passed": true
+    },
+    {
+      "portal": "enterprise",
+      "username": "demo_enterprise",
+      "passed": true
+    },
+    {
+      "portal": "admin",
+      "username": "demo_admin",
+      "passed": true
+    }
+  ],
+  "live_databases": {
+    "mysql": true,
+    "neo4j": true,
+    "graph_version": "neo4j-20260814-v01",
+    "postings": 20014,
+    "skills": 3695
+  },
+  "responsive_route_checks": {
+    "count": 34,
+    "horizontal_overflows": 0,
+    "widths": [
+      390,
+      768,
+      1440
+    ]
+  },
+  "cleanup": {
+    "removed_css_declarations": 1666,
+    "removed_vue_components": 1,
+    "removed_assets": 3,
+    "remaining_unreachable_modules": 0,
+    "remaining_unused_assets": 0
+  },
+  "configuration_generator": "first creation and preservation verified",
+  "docker": {
+    "compose_static_validation": "passed",
+    "container_build_and_restore": "not executed; Docker Engine unavailable on validation machine"
+  }
+}

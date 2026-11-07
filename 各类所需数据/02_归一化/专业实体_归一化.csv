@@ -1,0 +1,17 @@
+﻿major_id,entity_type,entity_name,major_code,discipline_code,discipline_name,major_class_code,major_class_name,industry,source_site,source_url,authority_level,quality_grade,review_status_final,governance_status_final,governance_version
+major_07809d32118a,Major,网络安全与执法,083108TK,08,工学,0831,公安技术类,AI/互联网/IT,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_1335525a4d65,Major,集成电路设计与集成系统,080710T,08,工学,0807,电子信息类,AI/互联网/IT,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_64dc40a5a980,Major,人工智能教育,040117TK,04,教育学,0401,教育学类,,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_77bdbb4af8b0,Major,人工智能,080717T,08,工学,0807,电子信息类,AI/互联网/IT,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_870a62da4668,Major,虚拟现实技术,080916T,08,工学,0809,计算机类,AI/互联网/IT,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_8a1b5ad2a11a,Major,商业人工智能,120219TK,12,管理学,1202,工商管理类,,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_8f3ced4e5bba,Major,产品设计,130504,13,艺术学,1305,设计学类,,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_9a66c05e12e0,Major,数据科学,071203T,07,理学,0712,统计学类,,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_a28d5651a857,Major,生物医药数据科学,140012TK,14,交叉学科,,,,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,B,approved,approved,20260720-v01
+major_a7ff102d45f7,Major,集成电路科学与工程,140005T,14,交叉学科,,,,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,B,approved,approved,20260720-v01
+major_b3b1ee265ea3,Major,信息安全,080904K,08,工学,0809,计算机类,AI/互联网/IT,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_c6106c250d52,Major,软件工程,080902,08,工学,0809,计算机类,AI/互联网/IT,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_d211b2c6cf1e,Major,大数据管理与应用,120108T,12,管理学,1201,管理科学与工程类,,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_d4f1ece6b72e,Major,资源环境大数据工程,081407T,08,工学,0814,地质类,AI/互联网/IT,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_e5261f1355a9,Major,数据科学与大数据技术,080910T,08,工学,0809,计算机类,AI/互联网/IT,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01
+major_fd2c23dbbb25,Major,物联网工程,080905,08,工学,0809,计算机类,AI/互联网/IT,教育部,http://www.moe.gov.cn/srcsite/A08/moe_1034/s3882/202604/W020260427440749576927.pdf,国家官方,A,approved,approved,20260720-v01

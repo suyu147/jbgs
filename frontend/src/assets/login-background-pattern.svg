@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" fill="none">
+  <defs>
+    <!-- Capability relationships and a learning path, etched into the canvas. -->
+    <g id="capability-graph">
+      <path d="M928 120 1030 162 1128 101 1240 150 1330 95M1030 162 1115 232 1240 150 1326 251M1115 232 1208 300 1326 251M1128 101 1115 232M1240 150 1208 300"/>
+      <circle cx="928" cy="120" r="5"/>
+      <circle cx="1030" cy="162" r="11"/>
+      <circle cx="1128" cy="101" r="6"/>
+      <circle cx="1240" cy="150" r="16"/>
+      <circle cx="1240" cy="150" r="24"/>
+      <circle cx="1330" cy="95" r="5"/>
+      <circle cx="1115" cy="232" r="9"/>
+      <circle cx="1208" cy="300" r="6"/>
+      <circle cx="1326" cy="251" r="8"/>
+    </g>
+    <g id="growth-path">
+      <path d="M700 812C775 812 768 753 842 753S928 794 991 741 1065 701 1135 723 1244 676 1325 614"/>
+      <path d="M700 828C775 828 768 769 842 769S928 810 991 757 1065 717 1135 739 1244 692 1325 630"/>
+      <path d="m1307 617 18-3-3 18"/>
+      <circle cx="842" cy="753" r="5"/>
+      <circle cx="991" cy="741" r="7"/>
+      <circle cx="1135" cy="723" r="5"/>
+      <circle cx="1325" cy="614" r="9"/>
+      <path d="M842 770v58m149-68v68m144-88v88m190-195v195" stroke-dasharray="2 9"/>
+    </g>
+    <g id="ability-orbits">
+      <circle cx="1404" cy="474" r="97"/>
+      <circle cx="1404" cy="474" r="126" stroke-dasharray="3 12"/>
+      <circle cx="1404" cy="474" r="157"/>
+      <path d="m1404 414 52 30v60l-52 30-52-30v-60zM1404 414v120m-52-90 104 60m0-60-104 60"/>
+      <circle cx="1307" cy="474" r="5"/>
+      <circle cx="1355" cy="390" r="5"/>
+      <circle cx="1355" cy="558" r="5"/>
+    </g>
+    <g id="small-connections">
+      <path d="m647 124 44-29 35 39 57-19m-92-20 6-36"/>
+      <circle cx="647" cy="124" r="4"/>
+      <circle cx="691" cy="95" r="6"/>
+      <circle cx="726" cy="134" r="4"/>
+      <circle cx="783" cy="115" r="4"/>
+      <circle cx="697" cy="59" r="3"/>
+    </g>
+    <g id="role-matching">
+      <rect x="804" y="39" width="48" height="63" rx="8"/>
+      <circle cx="828" cy="59" r="7"/>
+      <path d="M815 86v-5a13 13 0 0 1 26 0v5M852 72h28" stroke-dasharray="3 6"/>
+      <rect x="880" y="55" width="49" height="64" rx="8"/>
+      <path d="M891 72h25m-25 10h18m-18 10h13"/>
+      <circle cx="927" cy="113" r="11"/>
+      <path d="m922 113 4 4 7-8"/>
+    </g>
+    <g id="learning-steps">
+      <path d="M544 827h42a18 18 0 0 0 18-18v-36a18 18 0 0 1 18-18h34a18 18 0 0 0 18-18v-34"/>
+      <circle cx="544" cy="827" r="5"/>
+      <circle cx="604" cy="791" r="7"/>
+      <circle cx="655" cy="755" r="5"/>
+      <circle cx="674" cy="703" r="11"/>
+      <path d="m670 703 3 3 5-6M553 847h21m40-38h19m34-37h19"/>
+    </g>
+    <g id="skill-matrix">
+      <path d="M267 804h50l32 24h48M267 828h50l32-24h48m-130 48h50l32-24m-32-24v48"/>
+      <circle cx="267" cy="804" r="4"/>
+      <circle cx="267" cy="828" r="4"/>
+      <circle cx="267" cy="852" r="4"/>
+      <circle cx="317" cy="804" r="5"/>
+      <circle cx="317" cy="828" r="5"/>
+      <circle cx="317" cy="852" r="5"/>
+      <circle cx="349" cy="804" r="4"/>
+      <circle cx="349" cy="828" r="7"/>
+      <circle cx="397" cy="804" r="5"/>
+      <circle cx="397" cy="828" r="4"/>
+    </g>
+    <g id="peripheral-links">
+      <path d="M-22 230c90 40 70 123 44 177s3 116 63 143M-40 237c90 40 70 123 44 177s3 116 63 143"/>
+      <circle cx="43" cy="306" r="6"/>
+      <circle cx="22" cy="407" r="10"/>
+      <circle cx="85" cy="550" r="5"/>
+      <path d="m562 214 38-30 41 18 39-37m-80 19 5-29"/>
+      <circle cx="562" cy="214" r="4"/>
+      <circle cx="600" cy="184" r="7"/>
+      <circle cx="641" cy="202" r="4"/>
+      <circle cx="680" cy="165" r="5"/>
+      <circle cx="605" cy="155" r="3"/>
+    </g>
+    <g id="left-capability-links">
+      <path d="m306 116 47-36 56 34 50-38 44 25M353 80l16 63 40-29"/>
+      <circle cx="306" cy="116" r="5"/>
+      <circle cx="353" cy="80" r="8"/>
+      <circle cx="409" cy="114" r="5"/>
+      <circle cx="459" cy="76" r="10"/>
+      <circle cx="459" cy="76" r="16"/>
+      <circle cx="503" cy="101" r="4"/>
+      <circle cx="369" cy="143" r="4"/>
+    </g>
+    <g id="left-career-orbits">
+      <circle cx="-35" cy="486" r="116"/>
+      <circle cx="-35" cy="486" r="144" stroke-dasharray="3 12"/>
+      <circle cx="81" cy="486" r="6"/>
+      <circle cx="23" cy="386" r="5"/>
+      <circle cx="23" cy="586" r="5"/>
+      <path d="m10 516 21 12-21 12-21-12zM10 516v24"/>
+    </g>
+    <g id="left-growth-trail">
+      <path d="M20 865C82 865 68 807 125 807S194 855 243 820L267 804M20 876C82 876 68 818 125 818S194 866 243 831L267 815"/>
+      <circle cx="20" cy="865" r="5"/>
+      <circle cx="125" cy="807" r="8"/>
+      <circle cx="200" cy="837" r="5"/>
+      <path d="M125 822v44m75-15v29" stroke-dasharray="2 8"/>
+    </g>
+  </defs>
+  <g stroke="#fff" stroke-width="1.4" opacity=".62" transform="translate(0.8 1)" stroke-linecap="round" stroke-linejoin="round">
+    <use href="#capability-graph"/>
+    <use href="#growth-path"/>
+    <use href="#ability-orbits"/>
+    <use href="#small-connections"/>
+    <use href="#role-matching"/>
+    <use href="#learning-steps"/>
+    <use href="#skill-matrix"/>
+    <use href="#peripheral-links"/>
+    <use href="#left-capability-links"/>
+    <use href="#left-career-orbits"/>
+    <use href="#left-growth-trail"/>
+  </g>
+  <g stroke="#4c9186" stroke-width=".9" opacity=".13" stroke-linecap="round" stroke-linejoin="round">
+    <use href="#capability-graph"/>
+    <use href="#growth-path"/>
+    <use href="#ability-orbits"/>
+    <use href="#small-connections"/>
+    <use href="#role-matching"/>
+    <use href="#learning-steps"/>
+    <use href="#skill-matrix"/>
+    <use href="#peripheral-links"/>
+    <use href="#left-capability-links"/>
+    <use href="#left-career-orbits"/>
+    <use href="#left-growth-trail"/>
+  </g>
+</svg>

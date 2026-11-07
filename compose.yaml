@@ -1,0 +1,117 @@
+name: career-insight
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: career_insight
+      MYSQL_USER: career_insight_app
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Run python scripts/configure-server.py first}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Generate local deployment configuration first}
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database/mysql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: [CMD-SHELL, 'mysqladmin ping -h localhost -u root -p"$$MYSQL_ROOT_PASSWORD" --silent']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+
+  graph-restore:
+    image: neo4j:2026.05.0-community
+    user: root
+    entrypoint: [/bin/bash, -ec]
+    command:
+      - |
+        if [ ! -d /data/databases/neo4j ]; then
+          neo4j-admin database load neo4j --from-path=/backups
+        fi
+        chown -R neo4j:neo4j /data
+    volumes:
+      - neo4j-data:/data
+      - ./database/neo4j:/backups:ro
+
+  neo4j:
+    image: neo4j:2026.05.0-community
+    depends_on:
+      graph-restore:
+        condition: service_completed_successfully
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:?Generate local deployment configuration first}
+      NEO4J_server_memory_heap_initial__size: 512m
+      NEO4J_server_memory_heap_max__size: 1G
+      NEO4J_server_memory_pagecache_size: 512m
+    volumes:
+      - neo4j-data:/data
+    healthcheck:
+      test: [CMD-SHELL, 'cypher-shell -u neo4j -p "$${NEO4J_AUTH#neo4j/}" "RETURN 1" > /dev/null']
+      interval: 15s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8010
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: career_insight
+      MYSQL_USER: career_insight_app
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      NEO4J_URL: http://neo4j:7474
+      NEO4J_DATABASE: neo4j
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:5175}
+      AUTH_SECRET: ${AUTH_SECRET:?Generate local deployment configuration first}
+      AUTH_TOKEN_HOURS: 12
+      PERSONAL_USERNAME: ${PERSONAL_USERNAME:-demo_user}
+      PERSONAL_PASSWORD: ${PERSONAL_PASSWORD:-Career2026}
+      ENTERPRISE_USERNAME: ${ENTERPRISE_USERNAME:-demo_enterprise}
+      ENTERPRISE_PASSWORD: ${ENTERPRISE_PASSWORD:-Enterprise2026}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-demo_admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin2026}
+      AGENT_PROVIDER: ${AGENT_PROVIDER:-rules}
+      AGENT_BASE_URL: ${AGENT_BASE_URL:-https://api.coze.cn}
+      AGENT_CHAT_PATH: ${AGENT_CHAT_PATH:-/v3/chat}
+      AGENT_API_KEY: ${AGENT_API_KEY:-}
+      AGENT_USER_ID: ${AGENT_USER_ID:-career-insight}
+      AGENT_CAREER_PLANNING_BOT_ID: ${AGENT_CAREER_PLANNING_BOT_ID:-}
+      AGENT_ABILITY_ANALYSIS_BOT_ID: ${AGENT_ABILITY_ANALYSIS_BOT_ID:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      INTERVIEW_ASR_API_KEY: ${INTERVIEW_ASR_API_KEY:-}
+    volumes:
+      - uploads:/app/应用数据/uploads
+      - reports:/app/应用数据/reports
+    healthcheck:
+      test: [CMD, python, -c, "import json,urllib.request; d=json.load(urllib.request.urlopen('http://127.0.0.1:8010/health'))['data']; assert d['mysql'] and d['neo4j']"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.frontend
+    ports:
+      - '${WEB_PORT:-5175}:80'
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
+  neo4j-data:
+  uploads:
+  reports:

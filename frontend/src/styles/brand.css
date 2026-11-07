@@ -1,0 +1,15 @@
+/* The supplied wordmark has a transparent matte, so each portal supplies its own ground. */
+.app-shell.personal-portal .brand { --brand-logo-width: 196px; min-width: 0; flex-shrink: 0; margin-right: 0; padding: 0; background: transparent; border: 0; }
+.simple-auth-page.login-atmosphere .login-brand { --brand-logo-width: 210px; display: block; width: auto; height: auto; padding: 0; background: transparent; }
+.business-shell.business-shell .business-brand { --brand-logo-width: 196px; min-height: 64px; }
+.business-shell.business-shell .business-brand > .career-brand-logo { display: block; }
+@media (max-width: 1200px) {
+  .app-shell.personal-portal .brand { --brand-logo-width: 176px; }
+}
+@media (max-width: 820px) {
+  .simple-auth-page.login-atmosphere .login-brand { --brand-logo-width: 196px; }
+}
+@media (max-width: 640px) {
+  .app-shell.personal-portal .brand { --brand-logo-width: 156px; }
+  .simple-auth-page.login-atmosphere .login-brand { --brand-logo-width: 176px; }
+}

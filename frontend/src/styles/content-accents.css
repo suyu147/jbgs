@@ -1,0 +1,103 @@
+/* Local OFL display face: rounded headings, with the system face kept for reading and data. */
+@font-face {
+  font-family: 'Career Jelly';
+  src: url('../assets/fonts/zcool-kuaile-regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+.app-shell.personal-portal {
+  --type-mint: #176b5b;
+  --type-blue: #35698b;
+  --type-violet: #70558c;
+  --type-coral: #a6533e;
+  --font-jelly: 'Career Jelly', 'Microsoft YaHei UI', system-ui, sans-serif;
+}
+
+/* Color supports content grouping; status badges and chart meanings retain their own colors. */
+.personal-portal [data-job-tone] { --job-ink: var(--type-mint); --job-tint: #eaf5ef; }
+.personal-portal [data-job-tone='blue'] { --job-ink: var(--type-blue); --job-tint: #ebf3f9; }
+.personal-portal [data-job-tone='violet'] { --job-ink: var(--type-violet); --job-tint: #f2edf8; }
+.personal-portal [data-job-tone='coral'] { --job-ink: var(--type-coral); --job-tint: #fcf0e9; }
+
+.app-shell.personal-portal :is(.surface-heading h2, .panel-head h2, .emerging-intro h2,
+  .skill-radar-strip > header h3, .favorite-summary h2) {
+  font-family: var(--font-jelly) !important;
+  font-weight: 400 !important;
+  font-synthesis: none;
+  color: var(--type-blue);
+  letter-spacing: .02em;
+  text-shadow: 0 1px 0 rgba(255,255,255,.95), 0 2px 0 rgba(53,105,139,.12) !important;
+}
+.app-shell.personal-portal .surface-heading {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #cddfe1;
+}
+.app-shell.personal-portal .surface-heading h2 { font-size: 22px; line-height: 1.45; }
+.app-shell.personal-portal :is(.role-board > .surface-heading h2, .emerging-intro h2) { color: var(--type-violet); }
+.app-shell.personal-portal .market-pulse > header h3 { color: var(--type-mint); }
+.app-shell.personal-portal .occupation-watch > header h3 { color: var(--type-blue); }
+.app-shell.personal-portal .emerging-watch > header h3 { color: var(--type-violet); }
+
+/* Two catalog tabs have distinct, quiet accents; the selected state still carries a surface. */
+.app-shell.personal-portal .jobs-catalog-switch { border-bottom-color: #cddfe1; }
+.app-shell.personal-portal .jobs-catalog-switch > button { --catalog-ink: var(--type-blue); --catalog-tint: #e8f2f8; color: var(--catalog-ink); }
+.app-shell.personal-portal .jobs-catalog-switch > button:nth-child(2) { --catalog-ink: var(--type-violet); --catalog-tint: #f0eaf7; }
+.app-shell.personal-portal .jobs-catalog-switch > button:is(.active, :hover, :focus-visible) {
+  background: var(--catalog-tint) !important;
+  color: var(--catalog-ink);
+}
+.app-shell.personal-portal .jobs-catalog-switch > button strong {
+  font-family: var(--font-jelly) !important;
+  font-weight: 400;
+  font-size: 18px;
+  font-synthesis: none;
+  letter-spacing: .025em;
+}
+.app-shell.personal-portal .jobs-catalog-switch > button small { color: var(--ui-muted) !important; }
+
+/* A soft display treatment only on role names, never on salary or evidence figures. */
+.app-shell.personal-portal :is(.job-card-title h2, .role-card-heading > div > strong,
+  .emerging-title-button, .favorite-open h3) {
+  font-family: var(--font-jelly) !important;
+  font-weight: 400 !important;
+  font-synthesis: none;
+  color: var(--job-ink, var(--type-mint));
+  letter-spacing: .015em;
+  text-shadow: 0 1px 0 #fff, 0 2px 0 color-mix(in srgb, var(--job-ink, var(--type-mint)) 12%, transparent) !important;
+}
+.app-shell.personal-portal .role-card-heading > div > strong { font-size: 19px; line-height: 1.5; }
+.app-shell.personal-portal .job-card-title h2 { font-size: 20px; line-height: 1.5; }
+.app-shell.personal-portal .emerging-title-button { font-size: 19px; line-height: 1.5; }
+.app-shell.personal-portal :is(.job-card-title > span, .role-card-heading .role-field, .emerging-grid article > header small, .favorite-open small) { color: var(--job-ink, var(--type-blue)); }
+.app-shell.personal-portal :is(.job-card-salary strong, .role-card-salary strong) { color: var(--type-coral); }
+.app-shell.personal-portal :is(.job-card, .role-opportunity-list > button, .emerging-grid > article) {
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+.app-shell.personal-portal :is(.job-card:hover, .job-card:focus-within,
+  .role-opportunity-list > button:hover, .role-opportunity-list > button:focus-visible,
+  .emerging-grid > article:focus-within) {
+  background: color-mix(in srgb, var(--job-tint) 40%, #fff) !important;
+  border-color: color-mix(in srgb, var(--job-ink) 40%, #fff) !important;
+}
+.app-shell.personal-portal .job-card-skills > span,
+.app-shell.personal-portal .emerging-grid section em { background: #eaf5ef; color: #286850; }
+.app-shell.personal-portal .job-card-skills > span:nth-child(3n + 2),
+.app-shell.personal-portal .emerging-grid section em:nth-child(3n + 2) { background: #ebf3f9; color: #35698b; }
+.app-shell.personal-portal .job-card-skills > span:nth-child(3n),
+.app-shell.personal-portal .emerging-grid section em:nth-child(3n) { background: #f2edf8; color: #70558c; }
+.app-shell.personal-portal .emerging-watch [data-job-tone] strong { color: var(--job-ink); }
+
+@media (max-width: 640px) {
+  .app-shell.personal-portal .surface-heading h2 { font-size: 20px; }
+  .app-shell.personal-portal :is(.job-card-title h2, .role-card-heading > div > strong, .emerging-title-button) { font-size: 18px; }
+  .app-shell.personal-portal .jobs-catalog-switch > button strong { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-shell.personal-portal :is(.job-card, .role-opportunity-list > button, .emerging-grid > article) { transition: none; }
+}
+@media (forced-colors: active) {
+  .app-shell.personal-portal :is(.surface-heading h2, .panel-head h2, .emerging-intro h2,
+    .job-card-title h2, .role-card-heading > div > strong, .emerging-title-button) { text-shadow: none !important; }
+}

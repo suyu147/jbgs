@@ -1,0 +1,19 @@
+﻿topic_id,topic_name,topic_type,source_site,review_status,review_note,reviewed_at,entity_type,entity_name,review_status_final,governance_status_final,governance_version
+trend_topic_54b8a90b3ce64ee6,数据,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,数据,approved,approved,20260720-v01
+trend_topic_de064aec70efbe8a,大数据,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,大数据,approved,approved,20260720-v01
+trend_topic_410a9712e493707b,数据要素,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,数据要素,approved,approved,20260720-v01
+trend_topic_189979277dde4d42,数据中心,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,数据中心,approved,approved,20260720-v01
+trend_topic_1e34fdb300ef6e2f,软件,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,软件,approved,approved,20260720-v01
+trend_topic_4ed766e0c359ad72,互联网,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,互联网,approved,approved,20260720-v01
+trend_topic_a137faa1e5e5f802,数字经济,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,数字经济,approved,approved,20260720-v01
+trend_topic_d91867123995d72f,数字中国,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,数字中国,approved,approved,20260720-v01
+trend_topic_f975d4396266cfca,数字化转型,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,数字化转型,approved,approved,20260720-v01
+trend_topic_014f51c2ab91f31c,智能制造,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,智能制造,approved,approved,20260720-v01
+trend_topic_b4a8415205c3ffe0,集成电路,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,集成电路,approved,approved,20260720-v01
+trend_topic_e23d776c09beb06e,算力,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,算力,approved,approved,20260720-v01
+trend_topic_bc10285c6440524d,人才,job_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,人才,approved,approved,20260720-v01
+trend_topic_b1b7e0cfda21ffbb,就业,job_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,就业,approved,approved,20260720-v01
+trend_topic_cfd2d7c195e32ec7,职业,job_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,职业,approved,approved,20260720-v01
+trend_topic_8c1198de24812314,工业软件,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,工业软件,approved,approved,20260720-v01
+trend_topic_de0204639b585c97,芯片,skill_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,芯片,approved,approved,20260720-v01
+trend_topic_f0f3e908c213bd17,岗位,job_signal,中国政府网,approved,macro trend concept; intentionally not forced into Skill,2026-07-18T20:49:29+08:00,TrendTopic,岗位,approved,approved,20260720-v01
