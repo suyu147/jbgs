@@ -488,6 +488,42 @@ CREATE TABLE IF NOT EXISTS `publish_tasks` (
   KEY `ix_publish_tasks_draft_id` (`draft_id`),
   KEY `ix_publish_tasks_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE IF NOT EXISTS `agent_runs` (
+  `id` varchar(64) NOT NULL,
+  `batch_id` varchar(64) NOT NULL,
+  `draft_id` varchar(64) NOT NULL DEFAULT '',
+  `trigger` varchar(40) NOT NULL DEFAULT 'ingest',
+  `scope` varchar(24) NOT NULL DEFAULT 'batch',
+  `status` varchar(24) NOT NULL DEFAULT 'queued',
+  `stages` json NOT NULL,
+  `draft_count` int NOT NULL DEFAULT 0,
+  `description_count` int NOT NULL DEFAULT 0,
+  `llm_used` tinyint(1) NOT NULL DEFAULT 0,
+  `error` text NOT NULL,
+  `started_at` datetime NOT NULL,
+  `finished_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ix_agent_runs_batch_id` (`batch_id`),
+  KEY `ix_agent_runs_draft_id` (`draft_id`),
+  KEY `ix_agent_runs_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE IF NOT EXISTS `agent_descriptions` (
+  `id` varchar(64) NOT NULL,
+  `draft_id` varchar(64) NOT NULL,
+  `input_hash` varchar(64) NOT NULL,
+  `provider` varchar(24) NOT NULL DEFAULT 'rules',
+  `model` varchar(120) NOT NULL DEFAULT '',
+  `prompt_version` varchar(80) NOT NULL,
+  `status` varchar(24) NOT NULL DEFAULT 'rules',
+  `llm_error` text NOT NULL,
+  `sections` json NOT NULL,
+  `markdown_path` text NOT NULL,
+  `docx_path` text NOT NULL,
+  `generated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_agent_descriptions_draft_id` (`draft_id`),
+  KEY `ix_agent_descriptions_draft_id` (`draft_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

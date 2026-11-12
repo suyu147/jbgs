@@ -27,6 +27,13 @@ class Settings(BaseSettings):
     mysql_password: str
     agent_provider: str = "rules"
     entity_linker_enabled: bool = False
+    agent_pipeline_enabled: bool = False
+    agent_description_enabled: bool = True
+    agent_description_max_drafts: int = 30
+    agent_description_max_tokens: int = 4096
+    agent_description_timeout_seconds: int = 90
+    agent_description_prompt_version: str = "agent-description-v1"
+    agent_run_stale_minutes: int = 60
     feature_min_sample: int = 5
     emerging_role_age_months: int = 3
     emerging_role_mom_growth: float = 0.5

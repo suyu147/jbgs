@@ -106,7 +106,7 @@ def test_enterprise_submission_only_ingests_raw_record(monkeypatch):
     Base.metadata.create_all(engine)
     from app import main as api
 
-    monkeypatch.setattr(api, "parse_jd", lambda _: {})
+    monkeypatch.setattr("app.services_parse.parse_jd", lambda _: {})
     login = client.post("/api/v1/auth/login", json={
         "username": settings.enterprise_username, "password": settings.enterprise_password, "portal": "enterprise",
     })
@@ -137,7 +137,7 @@ def test_enabled_linker_persists_extraction_and_unresolved_links(monkeypatch):
     from app.linker import EntityLinker
 
     monkeypatch.setattr(api.settings, "entity_linker_enabled", True)
-    monkeypatch.setattr(api, "refresh_entity_linker", lambda db: EntityLinker(
+    monkeypatch.setattr("app.services_parse.refresh_entity_linker", lambda db: EntityLinker(
         [{"id": "skill-python", "type": "Skill", "name": "Python", "aliases": ["蟒蛇语言"]}],
         missing_eligibility={"Skill": 3},
     ))
@@ -154,6 +154,7 @@ def test_enabled_linker_persists_extraction_and_unresolved_links(monkeypatch):
     detail = client.get(f"/ingest/batches/{batch_id}", headers=headers).json()["data"]
     assert detail["metadata"]["linker_version"] == "entity-linker-v1"
     assert detail["metadata"]["linker_missing_eligibility"] == {"Skill": 3}
+    assert len([row for row in detail["stages"] if row["stage"] == "normalize"]) == 1
     assert any(item["entityType"] == "Company" and item["status"] == "new_candidate" for item in detail["entityLinks"])
     assert any(item["entityType"] == "City" and item["origin"] == "synthetic" for item in detail["entityLinks"])
     with Session(engine) as db:

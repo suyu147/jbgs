@@ -33,6 +33,7 @@ def _raw(db, batch_id, title, month, source, index):
 
 
 def test_period_normalization_contract():
+    assert normalize_period("2026-11") == ("2026-11", "month")
     assert normalize_period("2025-01-31") == ("2025-01", "month")
     assert normalize_period("2025Q2") == ("2025-Q2", "quarter")
     assert normalize_period("2025年第3季度") == ("2025-Q3", "quarter")

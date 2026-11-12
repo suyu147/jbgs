@@ -29,7 +29,7 @@ def normalize_period(value: object) -> tuple[str, str] | None:
     if not text:
         return None
     quarter = _QUARTER_RE.search(text)
-    if quarter and ("q" in text.lower() or "季" in text or "季度" in text or re.search(r"\d{4}[-/._年]?\s*[第]?[1-4]", text)):
+    if quarter and ("q" in text.lower() or "季" in text):
         return f"{quarter.group(1)}-Q{quarter.group(2)}", "quarter"
     month = _MONTH_RE.search(text)
     if month:

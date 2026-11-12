@@ -1,4 +1,5 @@
 import { apiClient } from '@/api/client'
+import type { AgentDescriptionData, AgentPipelineStatus, AgentRun, DescriptionMissing, EnterpriseSubmissionResult } from '@/types/domain'
 import { createPreviewForecast, previewDashboard, previewJobs, previewLocations } from '@/demo/productPreview'
 import { DEMO_ACCESS_TOKEN, readAuthSession } from '@/stores/auth'
 import type { AdminDashboardSummary, AgentHistoryMessage, AgentSessionSummary, DashboardSummary, DatasetItem, DatasetRevision, EmergingRoleDetail, EnterpriseAssessmentBatch, EnterpriseJobSubmission, EnterpriseOverview, EnterpriseResume, EvolutionData, FavoriteJob, ForecastOverview, ForecastScenario, GraphData, GraphFilterOptions, InterviewAnswerResult, InterviewReport, InterviewSessionState, JobDetail, JobFilterOptions, JobLocationOption, JobSalaryBucket, JobSummary, LearningStage, MatchResult, PageData, ReportContext, ResumeResult, ReviewItem, WorkspaceProfileData } from '@/types/domain'
@@ -279,8 +280,8 @@ export const insightService = {
   },
   getEnterpriseAssessments: (limit = 50): Promise<{items:EnterpriseAssessmentBatch[];total:number}> => cachedRequest(userCacheKey('enterprise-assessments', { limit }), () => data(apiClient.get('/enterprise/assessments', { params: { limit } })), 30_000),
   getEnterpriseAssessment: (batchId: string): Promise<EnterpriseAssessmentBatch> => data(apiClient.get(`/enterprise/assessments/${batchId}`)),
-  createEnterpriseJobSubmission: async (payload: Record<string, any>): Promise<EnterpriseJobSubmission> => {
-    const result = await data<EnterpriseJobSubmission>(apiClient.post('/enterprise/job-submissions', payload))
+  createEnterpriseJobSubmission: async (payload: Record<string, any>): Promise<EnterpriseSubmissionResult> => {
+    const result = await data<EnterpriseSubmissionResult>(apiClient.post('/enterprise/job-submissions', payload))
     invalidateReadCache()
     return result
   },
@@ -322,6 +323,17 @@ export const insightService = {
   getReviews: (status = 'pending'): Promise<ReviewItem[]> => cachedRequest(
     userCacheKey('reviews', { status }), () => data(apiClient.get('/reviews', { params: { status } })), 30_000,
   ),
+  getAgentPipelineStatus: (): Promise<AgentPipelineStatus> => data(apiClient.get('/agent/pipeline/status')),
+  getAgentRuns: (): Promise<{items: AgentRun[]}> => data(apiClient.get('/agent/runs')),
+  getIngestBatches: (): Promise<{items: Array<{id: string; sourceName: string; sourceType: string; status: string}>}> => data(apiClient.get('/ingest/batches')),
+  startAgentRun: (batchId: string): Promise<AgentRun> => data(apiClient.post(`/ingest/batches/${encodeURIComponent(batchId)}/agent-run`)),
+  getDraftDescription: (id: string): Promise<AgentDescriptionData | DescriptionMissing> => data(apiClient.get(`/admin/definitions/${encodeURIComponent(id)}/description`, { validateStatus: status => status === 404 || (status >= 200 && status < 300) })),
+  regenerateDraftDescription: async (id: string): Promise<{status: string; reason?: string}> => {
+    const result = await data<{status: string; reason?: string}>(apiClient.post(`/admin/definitions/${encodeURIComponent(id)}/description/regenerate`, null, { timeout: 180000 }))
+    invalidateReadCache()
+    return result
+  },
+  downloadDraftDescription: async (id: string, format: 'md' | 'docx'): Promise<Blob> => (await apiClient.get(`/admin/definitions/${encodeURIComponent(id)}/description`, { params: { download: 1, format }, responseType: 'blob' })).data,
   review: async (id: string, payload: Record<string, any>) => {
     const result = await data(apiClient.patch(`/reviews/${id}`, payload)); invalidateReadCache(); return result
   },

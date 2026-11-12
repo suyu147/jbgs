@@ -24,7 +24,8 @@ def asr_configured() -> bool:
     return bool(settings.interview_asr_api_key.strip())
 
 
-def deepseek_chat(messages: list[dict], json_mode: bool = False, temperature: float = 0.4) -> str:
+def deepseek_chat(messages: list[dict], json_mode: bool = False, temperature: float = 0.4,
+                  *, max_tokens: int = 2048, timeout: float = 120.0) -> str:
     """调用 DeepSeek OpenAI 兼容接口，返回完整文本。"""
     if not interview_llm_configured():
         raise InterviewProviderError("DeepSeek 未配置")
@@ -36,22 +37,24 @@ def deepseek_chat(messages: list[dict], json_mode: bool = False, temperature: fl
         "model": settings.deepseek_model.strip() or "deepseek-chat",
         "messages": messages,
         "temperature": temperature,
-        "max_tokens": 2048,
+        "max_tokens": max_tokens,
     }
     if json_mode:
         body["response_format"] = {"type": "json_object"}
     url = f"{settings.deepseek_base_url.rstrip('/')}/chat/completions"
     try:
-        response = httpx.post(url, headers=headers, json=body, timeout=120.0)
+        response = httpx.post(url, headers=headers, json=body, timeout=timeout)
         response.raise_for_status()
         data = response.json()
-    except httpx.HTTPError as reason:
+    except (httpx.HTTPError, json.JSONDecodeError) as reason:
         raise InterviewProviderError(f"DeepSeek 调用失败：{reason}") from reason
     try:
         content = data["choices"][0]["message"]["content"]
+        if not isinstance(content, str):
+            raise TypeError("message.content must be a string")
     except (KeyError, IndexError, TypeError) as reason:
         raise InterviewProviderError("DeepSeek 响应格式异常") from reason
-    return (content or "").strip()
+    return content.strip()
 
 
 def _extract_json(text: str):

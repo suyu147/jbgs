@@ -7,13 +7,15 @@ does not call Neo4j; publishing remains the sole graph-writing boundary.
 from __future__ import annotations
 
 import re
+import hashlib
 from collections import Counter, defaultdict
 from typing import Iterable
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .models import EntityLink, FeatureSnapshot, NormalizedRecord, RawRecord, RoleDefinitionDraft, Signal, uid
+from .models import EntityLink, FeatureSnapshot, NormalizedRecord, PipelineBatch, RawRecord, ReviewAction, RoleDefinitionDraft, Signal, uid
+from .services_agent import FROZEN_STATUSES
 
 
 DEFINITION_VERSION = "definition-v1"
@@ -191,26 +193,68 @@ def _existing_draft(db: Session, candidate_type: str, cohort_key: str, period_ke
 
 def _upsert_draft(
     db: Session, *, role_name: str, candidate_type: str, definition: dict, evidence: list[dict], batch_id: str,
-) -> RoleDefinitionDraft:
+) -> RoleDefinitionDraft | None:
     cohort_key = _text(definition.get("cohort_key"))
     period_key = _text(definition.get("period_key"))
     draft = _existing_draft(db, candidate_type, cohort_key, period_key)
+    if draft and _draft_skip_reason(db, draft):
+        return None
     if not draft:
         draft = RoleDefinitionDraft(
             id=uid("draft"), role_name=role_name, candidate_type=candidate_type,
             origin=PIPELINE_ORIGIN, batch_id=batch_id, evidence_grade=SOURCE_EVIDENCE_GRADE,
         )
         db.add(draft)
-    draft.role_name = role_name
     if cohort_key.startswith("role:"):
         draft.role_id = cohort_key.split(":", 1)[1]
+    definition = {**definition, "batch_ids": _unique([*((draft.definition or {}).get("batch_ids") or []), *(definition.get("batch_ids") or [])])}
     draft.definition = definition
     draft.evidence = evidence
     draft.origin = PIPELINE_ORIGIN
-    draft.batch_id = batch_id
+    if not draft.batch_id:
+        draft.batch_id = batch_id
     draft.evidence_grade = SOURCE_EVIDENCE_GRADE
-    if draft.status not in {"approved", "rejected"}:
-        draft.status = "pending"
+    draft.status = "pending"
+    return draft
+
+
+def _draft_skip_reason(db: Session, draft: RoleDefinitionDraft) -> str:
+    if draft.status in FROZEN_STATUSES:
+        return "draft_frozen"
+    if db.scalar(select(ReviewAction.id).where(ReviewAction.draft_id == draft.id).limit(1)):
+        return "draft_edited"
+    return ""
+
+
+def create_enterprise_draft(db: Session, batch: PipelineBatch, raw: RawRecord) -> RoleDefinitionDraft:
+    payload = raw.raw_payload or {}
+    responsibilities = payload.get("responsibilities") or [part.strip() for part in re.split(r"[。；;\n]", raw.content) if part.strip()]
+    def skills(field: str, placeholder: str) -> list[dict]:
+        values = payload.get(field) or [placeholder]
+        return [{"skill_id": f"enterprise_skill:{hashlib.sha256(str(value).encode()).hexdigest()[:20]}",
+                 "skill_name": str(value), "evidence_count": 1} for value in values]
+    period = raw.created_at.strftime("%Y-%m")
+    definition = {
+        "source_type": "enterprise_job_submission", "enterprise_name": raw.company_name,
+        "enterprise_user_id": (batch.metadata_json or {}).get("enterprise_user_id", ""),
+        "posting_count": int(payload.get("openingCount") or 1), "source_count": 1,
+        "evidence_record_count": 1, "confidence": 0.6, "definition_status": "human_review_required",
+        "cohort_key": f"enterprise:{raw.id}", "period_key": period, "batch_id": batch.id, "batch_ids": [batch.id],
+        "job_category": payload.get("job_category", ""), "location": payload.get("city", ""),
+        "first_seen": period, "latest_seen": period, "candidate_reason": "企业提交岗位，待人工复核。",
+        "core_responsibilities": responsibilities,
+        "required_skills": skills("requiredSkills", "待补充必备技能"),
+        "bonus_skills": skills("bonusSkills", "待补充加分技能"),
+        "application_scenarios": [{"scenario": str(value), "evidence_count": 1} for value in payload.get("applicationScenarios") or ["企业岗位招聘"]],
+    }
+    draft = RoleDefinitionDraft(
+        role_name=raw.title, candidate_type="new_role", origin=PIPELINE_ORIGIN, status="pending",
+        batch_id=batch.id, evidence_grade=SOURCE_EVIDENCE_GRADE, definition=definition,
+        evidence=[{"type": "source_record", "recordId": raw.id, "content_sha256": raw.content_sha256,
+                   "source": "jdText", "excerpt": raw.content[:500]}],
+    )
+    db.add(draft)
+    db.flush()
     return draft
 
 
@@ -245,6 +289,13 @@ def build_definition_stage(db: Session, *, batch_id: str | None = None, period_k
     reasons: Counter[str] = Counter()
     draft_ids: list[str] = []
     for signal in signals:
+        candidate_type = "new_role" if signal.signal_type == "emerging_role" else "skill_change"
+        existing = _existing_draft(db, candidate_type, signal.cohort_key, signal.period_key)
+        reason = _draft_skip_reason(db, existing) if existing else ""
+        if reason:
+            skipped += 1
+            reasons[reason] += 1
+            continue
         evidence_ids = _unique(signal.evidence_ids or [])
         raws, normalized, links = _load_context(db, evidence_ids)
         evidence = _evidence_rows(raws, evidence_ids)
@@ -313,6 +364,10 @@ def build_definition_stage(db: Session, *, batch_id: str | None = None, period_k
             continue
         existing = _existing_draft(db, candidate_type, signal.cohort_key, signal.period_key)
         draft = _upsert_draft(db, role_name=role_name, candidate_type=candidate_type, definition=definition, evidence=evidence, batch_id=draft_batch)
+        if draft is None:
+            skipped += 1
+            reasons[_draft_skip_reason(db, existing) if existing else "draft_changed"] += 1
+            continue
         draft_ids.append(draft.id)
         if existing:
             updated += 1

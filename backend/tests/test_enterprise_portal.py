@@ -15,6 +15,12 @@ from app.models import (
     RoleDefinitionDraft,
     RawRecord,
     PipelineBatch,
+    AgentRun,
+    AgentDescription,
+    ExtractedRecord,
+    NormalizedRecord,
+    PipelineStageLog,
+    ReviewAction,
     TalentAssessmentBatch,
     TalentAssessmentCandidate,
 )
@@ -29,7 +35,9 @@ def login(username: str, password: str, portal: str) -> dict[str, str]:
     return {"Authorization": f"Bearer {response.json()['data']['accessToken']}"}
 
 
-def test_enterprise_portal_batch_matching_and_admin_review_handoff():
+def test_enterprise_portal_batch_matching_and_admin_review_handoff(monkeypatch):
+    monkeypatch.setattr(settings, "agent_pipeline_enabled", True)
+    monkeypatch.setattr("app.services_orchestrator.generate_description", lambda *args, **kwargs: {"status": "completed", "provider": "rules"})
     enterprise_headers = login(settings.enterprise_username, settings.enterprise_password, "enterprise")
     personal_headers = login(settings.personal_username, settings.personal_password, "personal")
     admin_headers = login(settings.admin_username, settings.admin_password, "admin")
@@ -114,6 +122,12 @@ def test_enterprise_portal_batch_matching_and_admin_review_handoff():
         db.execute(delete(ResumeSkill).where(ResumeSkill.resume_id.in_(resume_ids)))
         db.execute(delete(ResumeProfile).where(ResumeProfile.id.in_(resume_ids)))
         db.execute(delete(RoleDefinitionDraft).where(RoleDefinitionDraft.id == draft_id))
+        db.execute(delete(AgentDescription).where(AgentDescription.draft_id == draft_id))
+        db.execute(delete(ReviewAction).where(ReviewAction.draft_id == draft_id))
+        db.execute(delete(AgentRun).where(AgentRun.batch_id == draft.definition["batch_id"]))
+        db.execute(delete(ExtractedRecord).where(ExtractedRecord.batch_id == draft.definition["batch_id"]))
+        db.execute(delete(NormalizedRecord).where(NormalizedRecord.batch_id == draft.definition["batch_id"]))
+        db.execute(delete(PipelineStageLog).where(PipelineStageLog.batch_id == draft.definition["batch_id"]))
         db.execute(delete(RawRecord).where(RawRecord.batch_id == draft.definition["batch_id"]))
         db.execute(delete(PipelineBatch).where(PipelineBatch.id == draft.definition["batch_id"]))
         db.commit()

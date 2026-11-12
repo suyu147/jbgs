@@ -165,6 +165,40 @@ class Signal(Base, TimestampMixin):
     signal_version: Mapped[str] = mapped_column(String(40), default="signal-v1")
 
 
+class AgentRun(Base):
+    __tablename__ = "agent_runs"
+    id: Mapped[str] = mapped_column(String(64), primary_key=True, default=lambda: uid("agent_run"))
+    batch_id: Mapped[str] = mapped_column(String(64), index=True)
+    draft_id: Mapped[str] = mapped_column(String(64), default="", index=True)
+    trigger: Mapped[str] = mapped_column(String(40), default="ingest")
+    scope: Mapped[str] = mapped_column(String(24), default="batch")
+    status: Mapped[str] = mapped_column(String(24), default="queued", index=True)
+    stages: Mapped[dict] = mapped_column(JSON, default=dict)
+    draft_count: Mapped[int] = mapped_column(default=0)
+    description_count: Mapped[int] = mapped_column(default=0)
+    llm_used: Mapped[bool] = mapped_column(Boolean, default=False)
+    error: Mapped[str] = mapped_column(Text, default="")
+    started_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
+
+class AgentDescription(Base):
+    __tablename__ = "agent_descriptions"
+    __table_args__ = (UniqueConstraint("draft_id", name="uq_agent_descriptions_draft_id"),)
+    id: Mapped[str] = mapped_column(String(64), primary_key=True, default=lambda: uid("agent_description"))
+    draft_id: Mapped[str] = mapped_column(String(64), index=True)
+    input_hash: Mapped[str] = mapped_column(String(64))
+    provider: Mapped[str] = mapped_column(String(24), default="rules")
+    model: Mapped[str] = mapped_column(String(120), default="")
+    prompt_version: Mapped[str] = mapped_column(String(80))
+    status: Mapped[str] = mapped_column(String(24), default="rules")
+    llm_error: Mapped[str] = mapped_column(Text, default="")
+    sections: Mapped[dict] = mapped_column(JSON, default=dict)
+    markdown_path: Mapped[str] = mapped_column(Text, default="")
+    docx_path: Mapped[str] = mapped_column(Text, default="")
+    generated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
 class ProcessingTask(Base, TimestampMixin):
     __tablename__ = "processing_tasks"
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=lambda: uid("task"))

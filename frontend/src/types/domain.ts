@@ -165,7 +165,22 @@ export interface EnterpriseOverview {
 export interface EnterpriseJobSubmission {
   id: string; roleId: string; roleName: string; companyName: string; jobCategory: string
   location: string; openingCount: number; status: string; statusLabel: string; createdAt: string
+  draftId?: string | null
 }
+
+export interface EnterpriseSubmissionResult { batchId: string; draftId?: string; id?: string; agentRunId?: string; draftStatus?: string }
+export interface AgentPipelineStatus { enabled: boolean; descriptionEnabled: boolean; llmConfigured: boolean; maxDrafts: number; running: boolean }
+export interface AgentRun {
+  id: string; batchId: string; draftId: string; trigger: string; scope: 'batch' | 'enterprise'
+  status: 'queued' | 'running' | 'completed' | 'failed' | 'skipped' | 'interrupted'
+  stages: Record<string, Record<string, any>>; skip_reasons: Record<string, number>
+  draftCount: number; descriptionCount: number; llmUsed: boolean; error: string; startedAt: string; finishedAt: string | null
+}
+export interface AgentDescriptionData {
+  id: string; draftId: string; provider: string; model: string; promptVersion: string; status: string
+  llmError: string; sections: Record<string, any>; markdown: string; stale: boolean; generatedAt: string
+}
+export interface DescriptionMissing { reason: 'disabled' | 'not_generated' | 'draft_changed' | 'frozen' }
 
 export interface WorkspaceProfileData {
   audience: 'seeker'; profile: Record<string, any>

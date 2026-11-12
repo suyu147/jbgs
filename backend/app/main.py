@@ -7,7 +7,7 @@ import math
 import re
 import threading
 import time
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, nullcontext
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import quote
@@ -16,7 +16,7 @@ from uuid import uuid4
 
 from fastapi import BackgroundTasks, Body, Depends, FastAPI, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, Response, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from pydantic import BaseModel, Field
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, landscape
@@ -41,6 +41,9 @@ from .interview import (
 from .models import (
     AgentMessage,
     AgentSession,
+    AgentRun,
+    AgentDescription,
+    uid,
     AppUser,
     AuditLog,
     DatasetRegistry,
@@ -71,7 +74,6 @@ from .models import (
     UserWorkspaceProfile,
 )
 from .pipeline import add_raw_record, finish_ingest, read_upload
-from .linker import ACTIVE_LINKER, LINKER_VERSION, EntityLinker, refresh_entity_linker
 from .neo4j_client import Neo4jError, neo4j
 from .services import (
     AgentProviderError,
@@ -107,9 +109,11 @@ from .services import (
     file_sha256,
     sync_dataset_to_graph,
 )
-from .services_parse import parse_record
+from .services_parse import normalize_batch
 from .services_feature import build_feature_stage, serialize_feature, serialize_signal
-from .services_m4 import build_definition_stage, serialize_definition_draft
+from .services_m4 import build_definition_stage, create_enterprise_draft, serialize_definition_draft
+from .services_agent import description_input_hash, generate_description
+from .services_orchestrator import PIPELINE_LOCK, create_agent_run, pipeline_guard, reconcile_stale_agent_runs, run_agent_pipeline, serialize_agent_run
 from .services_publish import (
     PublishValidationError,
     mark_published,
@@ -167,6 +171,7 @@ async def lifespan(_: FastAPI):
         seed_datasets(db)
         seed_candidates(db)
         seed_users(db)
+    reconcile_stale_agent_runs()
     yield
 
 
@@ -268,8 +273,8 @@ class EnterpriseJobSubmissionRequest(BaseModel):
     jobCategory: str = Field(min_length=2, max_length=120)
     location: str = Field(default="", max_length=120)
     openingCount: int = Field(default=1, ge=1, le=10000)
-    responsibilities: list[str] = Field(min_length=1, max_length=30)
-    requiredSkills: list[str] = Field(min_length=1, max_length=30)
+    responsibilities: list[str] = Field(default_factory=list, max_length=30)
+    requiredSkills: list[str] = Field(default_factory=list, max_length=30)
     bonusSkills: list[str] = Field(default_factory=list, max_length=30)
     applicationScenarios: list[str] = Field(default_factory=list, max_length=20)
     jdText: str = Field(default="", max_length=200000)
@@ -1903,9 +1908,12 @@ def _enterprise_submission_payload(item: RoleDefinitionDraft) -> dict:
 @app.post("/api/v1/enterprise/job-submissions", status_code=201)
 def create_enterprise_job_submission(
     payload: EnterpriseJobSubmissionRequest,
+    background_tasks: BackgroundTasks,
     user: AppUser = Depends(require_enterprise),
     db: Session = Depends(get_db),
 ):
+    if not settings.agent_pipeline_enabled and (not payload.responsibilities or not payload.requiredSkills):
+        raise HTTPException(422, "responsibilities 和 requiredSkills 至少各提供一项")
     content = payload.jdText.strip() or "\n".join(
         [payload.roleName.strip(), *[item.strip() for item in payload.responsibilities if item.strip()]]
     )
@@ -1925,6 +1933,42 @@ def create_enterprise_job_submission(
         "applicationScenarios": payload.applicationScenarios,
         "contact": payload.contact.strip(),
     }]
+    if settings.agent_pipeline_enabled:
+        if len(content) < 20:
+            raise HTTPException(422, "JD 内容过短（少于 20 字），请补充职责描述")
+        with pipeline_guard() as acquired:
+            if not acquired:
+                raise HTTPException(503, "busy")
+            db.commit()
+            db.expire_all()
+            fingerprint = hashlib.sha256(content.encode("utf-8")).hexdigest()
+            prior_rows = db.scalars(select(RawRecord).where(RawRecord.content_sha256 == fingerprint)
+                                    .order_by(RawRecord.created_at, RawRecord.id)).all()
+            for prior in prior_rows:
+                prior_batch = db.get(PipelineBatch, prior.batch_id)
+                if prior_batch and prior_batch.source_type == "enterprise" and (prior_batch.metadata_json or {}).get("enterprise_user_id") == user.id:
+                    draft = db.scalar(select(RoleDefinitionDraft).where(RoleDefinitionDraft.batch_id == prior.batch_id))
+                    # Legacy batches have no draft; a resubmission must create one.
+                    if draft:
+                        run = db.scalar(select(AgentRun).where(AgentRun.batch_id == prior.batch_id).order_by(AgentRun.started_at.desc()).limit(1))
+                        return envelope({"batchId": prior.batch_id, "draftId": draft.id, "id": draft.id,
+                                         "draftStatus": draft.status, "agentRunId": run.id if run else None}, "已返回原提交")
+            try:
+                result = _persist_ingest_records(db, records, source_type="enterprise", source_name="enterprise_job_submission",
+                    dataset_name=payload.companyName.strip(), adapter_metadata={"enterprise_user_id": user.id, "source_inferred_from": "enterprise_submission"}, commit=False)
+                batch = db.get(PipelineBatch, result["batchId"])
+                raw = db.scalar(select(RawRecord).where(RawRecord.batch_id == batch.id))
+                draft = create_enterprise_draft(db, batch, raw)
+                db.add(AuditLog(action="enterprise.job_submission.create", target_type="pipeline_batch", target_id=batch.id,
+                                detail={"userId": user.id, "draftId": draft.id, "companyName": payload.companyName, "roleName": payload.roleName}))
+                db.commit()
+                result.update({"draftId": draft.id, "id": draft.id, "draftStatus": draft.status})
+                _schedule_agent_run(db, background_tasks, result, draft_id=draft.id)
+            except Exception:
+                db.rollback()
+                raise
+        _invalidate_read_cache()
+        return envelope(result, "企业岗位草稿已提交，等待人工复核")
     try:
         result = _persist_ingest_records(
             db, records, source_type="enterprise", source_name="enterprise_job_submission",
@@ -1960,12 +2004,15 @@ def list_enterprise_job_submissions(
         record = db.scalars(select(RawRecord).where(RawRecord.batch_id == batch.id)).first()
         if not record:
             continue
+        draft = db.scalar(select(RoleDefinitionDraft).where(RoleDefinitionDraft.batch_id == batch.id)) if settings.agent_pipeline_enabled else None
+        status = draft.status if draft else batch.status
         items.append({
             "id": batch.id, "roleName": record.title, "companyName": record.company_name,
             "jobCategory": (record.raw_payload or {}).get("job_category", ""),
             "location": (record.raw_payload or {}).get("city", ""),
             "openingCount": int((record.raw_payload or {}).get("openingCount") or 0),
-            "status": batch.status, "statusLabel": "已接入待解析",
+            "draftId": draft.id if draft else None,
+            "status": status, "statusLabel": {"pending": "待治理复核", "approved": "已批准待发布", "rejected": "已驳回", "published": "已发布", "withdrawn": "已撤回"}.get(status, "已接入待解析"),
             "createdAt": batch.created_at.isoformat() if batch.created_at else "",
         })
     return envelope({"items": items, "total": len(items)})
@@ -2818,8 +2865,115 @@ DATASET_MAX_BYTES = 250 * 1024 * 1024
 DATASET_SUFFIXES = {".csv", ".json", ".xlsx", ".xls", ".txt"}
 
 
+def _schedule_agent_run(db: Session, background_tasks: BackgroundTasks, result: dict, *, draft_id: str = "") -> None:
+    if settings.agent_pipeline_enabled:
+        batch = db.get(PipelineBatch, result["batchId"])
+        run = create_agent_run(db, batch, draft_id=draft_id)
+        result["agentRunId"] = run.id
+        background_tasks.add_task(run_agent_pipeline, run.id)
+
+
+@app.get("/api/v1/ingest/batches", dependencies=[Depends(require_admin)])
+@app.get("/ingest/batches", dependencies=[Depends(require_admin)])
+def list_ingest_batches(db: Session = Depends(get_db)):
+    rows = db.scalars(select(PipelineBatch).order_by(PipelineBatch.created_at.desc(), PipelineBatch.id).limit(200)).all()
+    return envelope({"items": [{"id": row.id, "sourceName": row.source_name, "sourceType": row.source_type,
+                                 "status": row.status} for row in rows]})
+
+
+@app.post("/api/v1/ingest/batches/{batch_id}/agent-run", status_code=202, dependencies=[Depends(require_admin)])
+@app.post("/ingest/batches/{batch_id}/agent-run", status_code=202, dependencies=[Depends(require_admin)])
+def start_agent_run(batch_id: str, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    if not settings.agent_pipeline_enabled:
+        raise HTTPException(409, "智能体自动编排未开启")
+    batch = db.get(PipelineBatch, batch_id)
+    if not batch:
+        raise HTTPException(404, "接入批次不存在")
+    run = create_agent_run(db, batch, trigger="manual")
+    background_tasks.add_task(run_agent_pipeline, run.id)
+    return envelope(serialize_agent_run(run))
+
+
+@app.get("/api/v1/agent/runs", dependencies=[Depends(require_admin)])
+@app.get("/agent/runs", dependencies=[Depends(require_admin)])
+def list_agent_runs(db: Session = Depends(get_db)):
+    rows = db.scalars(select(AgentRun).order_by(AgentRun.started_at.desc(), AgentRun.id).limit(200)).all()
+    return envelope({"items": [serialize_agent_run(row) for row in rows]})
+
+
+@app.get("/api/v1/agent/runs/{run_id}", dependencies=[Depends(require_admin)])
+@app.get("/agent/runs/{run_id}", dependencies=[Depends(require_admin)])
+def get_agent_run(run_id: str, db: Session = Depends(get_db)):
+    row = db.get(AgentRun, run_id)
+    if not row:
+        raise HTTPException(404, "运行不存在")
+    return envelope(serialize_agent_run(row))
+
+
+@app.get("/api/v1/agent/pipeline/status", dependencies=[Depends(require_admin)])
+@app.get("/agent/pipeline/status", dependencies=[Depends(require_admin)])
+def agent_pipeline_status():
+    return envelope({"enabled": settings.agent_pipeline_enabled, "descriptionEnabled": settings.agent_description_enabled,
+                     "llmConfigured": bool(settings.deepseek_api_key.strip()), "maxDrafts": settings.agent_description_max_drafts,
+                     "running": PIPELINE_LOCK.locked()})
+
+
+@app.get("/api/v1/admin/definitions/{draft_id}/description", dependencies=[Depends(require_admin)])
+@app.get("/admin/definitions/{draft_id}/description", dependencies=[Depends(require_admin)])
+def get_draft_description(draft_id: str, download: int = 0, format: str = "md", db: Session = Depends(get_db)):
+    draft = db.get(RoleDefinitionDraft, draft_id)
+    if not draft:
+        raise HTTPException(404, "候选不存在")
+    row = db.scalar(select(AgentDescription).where(AgentDescription.draft_id == draft_id))
+    if row is None:
+        reason = "not_generated"
+        if not settings.agent_pipeline_enabled or not settings.agent_description_enabled:
+            reason = "disabled"
+        elif draft.status != "pending":
+            reason = "frozen"
+        else:
+            for run in db.scalars(select(AgentRun).order_by(AgentRun.started_at.desc()).limit(200)):
+                items = ((run.stages or {}).get("description") or {}).get("items") or []
+                match = next((item for item in items if item.get("draftId") == draft_id), None)
+                if match:
+                    if match.get("reason") == "draft_changed":
+                        reason = "draft_changed"
+                    break
+        return JSONResponse(envelope({"reason": reason}, "暂无岗位描述"), status_code=404)
+    if download:
+        if format not in {"md", "docx"}:
+            raise HTTPException(422, "format 必须是 md 或 docx")
+        path = Path(row.docx_path if format == "docx" else row.markdown_path)
+        if not path.is_file():
+            raise HTTPException(404, "描述文件不存在")
+        return FileResponse(path, filename=f"{draft_id}.{format}", media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document" if format == "docx" else "text/markdown; charset=utf-8")
+    markdown_path = Path(row.markdown_path)
+    return envelope({"id": row.id, "draftId": row.draft_id, "provider": row.provider, "model": row.model,
+                     "promptVersion": row.prompt_version, "status": row.status, "llmError": row.llm_error,
+                     "sections": row.sections, "markdown": markdown_path.read_text(encoding="utf-8") if markdown_path.is_file() else "",
+                     "stale": row.input_hash != description_input_hash(db, draft), "generatedAt": row.generated_at.isoformat()})
+
+
+@app.post("/api/v1/admin/definitions/{draft_id}/description/regenerate", dependencies=[Depends(require_admin)])
+@app.post("/admin/definitions/{draft_id}/description/regenerate", dependencies=[Depends(require_admin)])
+def regenerate_draft_description(draft_id: str, db: Session = Depends(get_db)):
+    with pipeline_guard() as acquired:
+        if not acquired:
+            return JSONResponse(envelope({"status": "skipped", "reason": "busy"}), status_code=202)
+        db.commit()
+        db.expire_all()
+        draft = db.get(RoleDefinitionDraft, draft_id)
+        if not draft:
+            raise HTTPException(404, "候选不存在")
+        if draft.status != "pending":
+            raise HTTPException(409, "仅待复核草稿可重新生成描述")
+        if not settings.agent_pipeline_enabled:
+            return envelope({"status": "skipped", "reason": "disabled"})
+        return envelope(generate_description(db, draft, force=True))
+
+
 def _persist_ingest_records(db: Session, records: list[dict], *, source_type: str, source_name: str,
-                            dataset_name: str = "", adapter_metadata: dict | None = None) -> dict:
+                            dataset_name: str = "", adapter_metadata: dict | None = None, commit: bool = True) -> dict:
     batch = PipelineBatch(
         id=f"batch_{uuid4().hex}", source_type=source_type, source_name=source_name,
         dataset_name=dataset_name, status="received", stage="ingest", metadata_json=adapter_metadata or {},
@@ -2851,110 +3005,17 @@ def _persist_ingest_records(db: Session, records: list[dict], *, source_type: st
             if raw and raw.duplicate_of:
                 counts["duplicates"] += 1
     finish_ingest(db, batch, counts)
-    if settings.entity_linker_enabled:
-        from .linker import normalize_surface
-
-        active_linker = refresh_entity_linker(db)
-        token = ACTIVE_LINKER.set(active_linker)
-        try:
-            raw_records = db.scalars(select(RawRecord).where(RawRecord.batch_id == batch.id)).all()
-            linked_count = 0
-            for raw in raw_records:
-                parser_name, parser_version, parsed = parse_record(raw)
-                extracted = db.scalar(select(ExtractedRecord).where(
-                    ExtractedRecord.batch_id == batch.id, ExtractedRecord.raw_record_id == raw.id,
-                ))
-                if not extracted:
-                    extracted = ExtractedRecord(batch_id=batch.id, raw_record_id=raw.id)
-                    db.add(extracted)
-                extracted.parser_name = parser_name
-                extracted.parser_version = parser_version
-                extracted.data = parsed
-                normalized = db.scalar(select(NormalizedRecord).where(
-                    NormalizedRecord.batch_id == batch.id, NormalizedRecord.raw_record_id == raw.id,
-                ))
-                if not normalized:
-                    normalized = NormalizedRecord(batch_id=batch.id, raw_record_id=raw.id)
-                    db.add(normalized)
-                normalized.data = parsed
-                normalized.linker_version = LINKER_VERSION
-
-                surfaces = []
-                if raw.node_type == "JobPosting":
-                    surfaces = [("JobRole", parsed.get("title") or raw.title), ("Company", raw.company_name),
-                                ("City", parsed.get("city") or raw.raw_payload.get("city")
-                                 or raw.raw_payload.get("city_canonical", "")),
-                                ("Education", parsed.get("education") or raw.raw_payload.get("education")
-                                 or raw.raw_payload.get("education_canonical", ""))]
-                raw_record_id = raw.id
-                for entity_type, surface in surfaces:
-                    if not surface:
-                        continue
-                    if entity_type == "City":
-                        active_linker.add_dynamic_city(surface)
-                    result = active_linker.link(entity_type, surface)
-                    normalized_surface = normalize_surface(surface)
-                    link = db.scalar(select(EntityLink).where(
-                        EntityLink.batch_id == batch.id,
-                        EntityLink.raw_record_id == raw.id,
-                        EntityLink.entity_type == entity_type,
-                        EntityLink.normalized_surface_form == normalized_surface,
-                    ))
-                    if not link:
-                        link = EntityLink(batch_id=batch.id, raw_record_id=raw_record_id,
-                                          entity_type=entity_type, surface_form=surface,
-                                          normalized_surface_form=normalized_surface)
-                        db.add(link)
-                    link.entity_id = result["entity_id"]
-                    link.confidence = result["confidence"]
-                    link.status = result["status"]
-                    link.candidates = result["candidates"]
-                    link.entity_origin = "synthetic" if entity_type in {"City", "Education"} else "asset"
-                    link.linker_version = LINKER_VERSION
-                    linked_count += 1
-                for skill in parsed.get("skills", []):
-                    skill["raw_record_id"] = raw.id
-                    surface = skill.get("surface_form") or skill.get("skill_name", "")
-                    if not surface:
-                        continue
-                    normalized_surface = normalize_surface(surface)
-                    link = db.scalar(select(EntityLink).where(
-                        EntityLink.batch_id == batch.id, EntityLink.raw_record_id == raw.id,
-                        EntityLink.entity_type == "Skill",
-                        EntityLink.normalized_surface_form == normalized_surface,
-                    ))
-                    if not link:
-                        link = EntityLink(batch_id=batch.id, raw_record_id=raw.id, entity_type="Skill",
-                                          surface_form=surface, normalized_surface_form=normalized_surface)
-                        db.add(link)
-                    link.entity_id = skill.get("skill_id") or None
-                    link.confidence = float(skill.get("confidence") or 0)
-                    link.status = skill.get("link_status") or "new_candidate"
-                    link.candidates = skill.get("link_candidates") or []
-                    link.linker_version = LINKER_VERSION
-                    linked_count += 1
-                extracted.data = parsed
-                normalized.data = parsed
-            batch.metadata_json = {
-                **(batch.metadata_json or {}),
-                "linker_version": LINKER_VERSION,
-                "linker_enabled": True,
-                "linker_missing_eligibility": active_linker.missing_eligibility,
-            }
-            stage_counts = {"processed": len(raw_records), "links": linked_count,
-                            "unresolved": db.scalar(select(func.count()).select_from(EntityLink).where(
-                                EntityLink.batch_id == batch.id, EntityLink.status == "unresolved")) or 0}
-            db.add(PipelineStageLog(batch_id=batch.id, stage="normalize", status="completed", statistics=stage_counts))
-            batch.status, batch.stage = "completed", "normalize"
-        finally:
-            ACTIVE_LINKER.reset(token)
-    db.commit()
+    if settings.agent_pipeline_enabled or settings.entity_linker_enabled:
+        normalize_batch(db, batch)
+    if commit:
+        db.commit()
     return {"batchId": batch.id, "status": batch.status, "stage": batch.stage, **counts}
 
 
 @app.post("/api/v1/ingest/uploads", status_code=201, dependencies=[Depends(require_admin)])
 @app.post("/ingest/uploads", status_code=201, dependencies=[Depends(require_admin)])
 async def ingest_upload(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     dataset_name: str = Form(""),
     dataset_id: str = Form(""),
@@ -2971,33 +3032,47 @@ async def ingest_upload(
     if not dataset_name.strip() and not Path(filename).stem and registered:
         name, inferred_from = registered.name, "dataset_registry"
     metadata["source_inferred_from"] = inferred_from
-    try:
-        result = _persist_ingest_records(
-            db, rows, source_type="upload", source_name=filename,
-            dataset_name=name, adapter_metadata=metadata,
-        )
-    except HTTPException:
-        db.rollback()
-        raise
+    with pipeline_guard() if settings.agent_pipeline_enabled else nullcontext(True) as acquired:
+        if not acquired:
+            raise HTTPException(503, "busy")
+        if settings.agent_pipeline_enabled:
+            db.commit()
+            db.expire_all()
+        try:
+            result = _persist_ingest_records(
+                db, rows, source_type="upload", source_name=filename,
+                dataset_name=name, adapter_metadata=metadata,
+            )
+        except HTTPException:
+            db.rollback()
+            raise
+        _schedule_agent_run(db, background_tasks, result)
     return envelope(result, "文件已接入原始数据批次")
 
 
 @app.post("/api/v1/ingest/sources", status_code=201, dependencies=[Depends(require_admin)])
 @app.post("/ingest/sources", status_code=201, dependencies=[Depends(require_admin)])
-def ingest_sources(payload: dict = Body(...), db: Session = Depends(get_db)):
+def ingest_sources(background_tasks: BackgroundTasks, payload: dict = Body(...), db: Session = Depends(get_db)):
     records = payload.get("records")
     if records is None:
         records = [payload]
     if not isinstance(records, list) or not records or any(not isinstance(item, dict) for item in records):
         raise HTTPException(422, "records 必须是非空对象数组")
-    try:
-        dataset_name = str(payload.get("dataset_name") or "").strip()
-        result = _persist_ingest_records(
-            db, records, source_type="structured", source_name="structured", dataset_name=dataset_name,
-        )
-    except HTTPException:
-        db.rollback()
-        raise
+    with pipeline_guard() if settings.agent_pipeline_enabled else nullcontext(True) as acquired:
+        if not acquired:
+            raise HTTPException(503, "busy")
+        if settings.agent_pipeline_enabled:
+            db.commit()
+            db.expire_all()
+        try:
+            dataset_name = str(payload.get("dataset_name") or "").strip()
+            result = _persist_ingest_records(
+                db, records, source_type="structured", source_name="structured", dataset_name=dataset_name,
+            )
+        except HTTPException:
+            db.rollback()
+            raise
+        _schedule_agent_run(db, background_tasks, result)
     return envelope(result, "结构化记录已接入原始数据批次")
 
 
@@ -3053,21 +3128,26 @@ def list_entity_links(batch_id: str = "", status: str = "", db: Session = Depend
 @app.post("/api/v1/ingest/batches/{batch_id}/features", dependencies=[Depends(require_admin)])
 @app.post("/ingest/batches/{batch_id}/features", dependencies=[Depends(require_admin)])
 def build_batch_features(batch_id: str, db: Session = Depends(get_db)):
-    batch = db.get(PipelineBatch, batch_id)
-    if not batch:
-        raise HTTPException(404, "接入批次不存在")
-    try:
-        result = build_feature_stage(db, batch_id=batch_id)
-        batch.metadata_json = {**(batch.metadata_json or {}), "feature_version": result["feature_version"], "signal_version": result["signal_version"], "feature_input_summary": result["input_summary"]}
-        batch.statistics = {**(batch.statistics or {}), "feature": result}
-        batch.stage = "feature"
-        batch.status = "completed"
-        db.add(PipelineStageLog(batch_id=batch_id, stage="feature", status="completed", statistics=result))
+    with pipeline_guard() as acquired:
+        if not acquired:
+            return JSONResponse(envelope({"status": "skipped", "reason": "busy"}), status_code=202)
         db.commit()
-    except Exception:
-        db.rollback()
-        raise
-    return envelope(result, "特征与信号已重算")
+        db.expire_all()
+        batch = db.get(PipelineBatch, batch_id)
+        if not batch:
+            raise HTTPException(404, "接入批次不存在")
+        try:
+            result = build_feature_stage(db, batch_id=batch_id)
+            batch.metadata_json = {**(batch.metadata_json or {}), "feature_version": result["feature_version"], "signal_version": result["signal_version"], "feature_input_summary": result["input_summary"]}
+            batch.statistics = {**(batch.statistics or {}), "feature": result}
+            batch.stage = "feature"
+            batch.status = "completed"
+            db.add(PipelineStageLog(batch_id=batch_id, stage="feature", status="completed", statistics=result))
+            db.commit()
+        except Exception:
+            db.rollback()
+            raise
+        return envelope(result, "特征与信号已重算")
 
 
 @app.get("/api/v1/ingest/features", dependencies=[Depends(require_admin)])
@@ -3099,25 +3179,30 @@ def list_signals(signal_type: str = "", status: str = "", cohort_key: str = "", 
 @app.post("/api/v1/ingest/batches/{batch_id}/definitions", dependencies=[Depends(require_admin)])
 @app.post("/ingest/batches/{batch_id}/definitions", dependencies=[Depends(require_admin)])
 def build_batch_definitions(batch_id: str, period_key: str = "", db: Session = Depends(get_db)):
-    batch = db.get(PipelineBatch, batch_id)
-    if not batch:
-        raise HTTPException(404, "接入批次不存在")
-    try:
-        result = build_definition_stage(db, batch_id=batch_id, period_key=period_key or None)
-        batch.metadata_json = {
-            **(batch.metadata_json or {}),
-            "definition_version": result["definition_version"],
-            "definition_batch_id": batch_id,
-        }
-        batch.statistics = {**(batch.statistics or {}), "definition": result}
-        batch.stage = "definition"
-        batch.status = "completed"
-        db.add(PipelineStageLog(batch_id=batch_id, stage="definition", status="completed", statistics=result))
+    with pipeline_guard() as acquired:
+        if not acquired:
+            return JSONResponse(envelope({"status": "skipped", "reason": "busy"}), status_code=202)
         db.commit()
-    except Exception:
-        db.rollback()
-        raise
-    return envelope(result, "岗位定义候选已生成")
+        db.expire_all()
+        batch = db.get(PipelineBatch, batch_id)
+        if not batch:
+            raise HTTPException(404, "接入批次不存在")
+        try:
+            result = build_definition_stage(db, batch_id=batch_id, period_key=period_key or None)
+            batch.metadata_json = {
+                **(batch.metadata_json or {}),
+                "definition_version": result["definition_version"],
+                "definition_batch_id": batch_id,
+            }
+            batch.statistics = {**(batch.statistics or {}), "definition": result}
+            batch.stage = "definition"
+            batch.status = "completed"
+            db.add(PipelineStageLog(batch_id=batch_id, stage="definition", status="completed", statistics=result))
+            db.commit()
+        except Exception:
+            db.rollback()
+            raise
+        return envelope(result, "岗位定义候选已生成")
 
 
 @app.get("/api/v1/ingest/definitions", dependencies=[Depends(require_admin)])
@@ -3454,23 +3539,25 @@ def _merge_published_role_definition(role_id: str, version_id: str, definition: 
         resolved.append({
             "id": rows[0]["id"], "name": rows[0]["name"], "tier": tier,
             "change_type": str(item.get("change_type") or "increase") if isinstance(item, dict) else "increase",
+            "original": item if isinstance(item, dict) else {},
         })
-    if unresolved:
-        raise HTTPException(409, f"以下技能尚未登记到技能资产，不能发布：{', '.join(unresolved[:8])}")
-    if resolved:
-        from types import SimpleNamespace
-
-        projection_version = SimpleNamespace(
-            role_id=role_id, version_id=version_id, candidate_type=candidate_type,
-            definition=definition,
-        )
-        projection_result = project_role_version(neo4j, projection_version)
+    from types import SimpleNamespace
+    projected_definition = copy.deepcopy(definition)
+    resolved_by_tier = {tier: [{**item["original"], "skill_id": item["id"], "skill_name": item["name"], "change_type": item["change_type"], "tier": tier}
+                               for item in resolved if item["tier"] == tier] for tier in ("core", "bonus")}
+    if candidate_type == "skill_change":
+        projected_definition["changes"] = [item for items in resolved_by_tier.values() for item in items]
     else:
-        projection_result = {"projected": 0, "closed": 0, "skipped": []}
+        projected_definition["required_skills"] = resolved_by_tier["core"]
+        projected_definition["bonus_skills"] = resolved_by_tier["bonus"]
+    projection_version = SimpleNamespace(role_id=role_id, version_id=version_id,
+                                         candidate_type=candidate_type, definition=projected_definition)
+    projection_result = project_role_version(neo4j, projection_version)
     return {
         "skillsMerged": len(resolved),
         "trendLabel": "",
         "projection": projection_result,
+        "unresolvedSkills": unresolved,
     }
 
 
@@ -3662,6 +3749,7 @@ def publish_graph_version(version_id: str, db: Session = Depends(get_db)):
                 origin=candidate_draft.origin, batch_id=candidate_draft.batch_id,
                 evidence_grade=candidate_draft.evidence_grade, publish_result={},
             )
+            pending_version = mysql_version
     if mysql_version is not None:
         if mysql_version.status == "published":
             return envelope({"id": version_id, "status": "published", "roleId": mysql_version.role_id, **(mysql_version.publish_result or {})}, "岗位定义版本已发布")
@@ -3686,8 +3774,8 @@ def publish_graph_version(version_id: str, db: Session = Depends(get_db)):
             _validate_publishable_definition(definition, mysql_version.candidate_type)
             graph_result = publish_neo4j_version(neo4j, mysql_version)
             graph_written = True
-            projection_result = project_role_version(neo4j, mysql_version)
-            graph_result = {**graph_result, "projection": projection_result}
+            merge_result = _merge_published_role_definition(mysql_version.role_id, version_id, definition, mysql_version.candidate_type)
+            graph_result = {**graph_result, **merge_result}
             task.status = "neo4j_written"
             task.result = graph_result
             db.commit()
@@ -3735,7 +3823,7 @@ def publish_graph_version(version_id: str, db: Session = Depends(get_db)):
                 db.commit()
             raise HTTPException(503, f"Neo4j 已写入，MySQL 状态待补偿：{task.id if task else task_key}") from exc
         _invalidate_read_cache()
-        return envelope({**graph_result, "skillsMerged": 0}, "图谱版本已发布")
+        return envelope(graph_result, "图谱版本已发布")
 
     rows = neo4j.query(
         "MATCH (r:JobRole)-[:HAS_VERSION]->(v:RoleDefinitionVersion {version_id:$id}) "

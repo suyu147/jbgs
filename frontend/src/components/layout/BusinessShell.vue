@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { insightService } from '@/services/insightService'
 import { useRoute, useRouter } from 'vue-router'
 import { BarChart3, BriefcaseBusiness, ChevronRight, Database, LayoutDashboard, LogOut, Menu, PanelLeftClose, PanelLeftOpen, ShieldCheck, UserCheck, UsersRound, X } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
@@ -11,6 +12,12 @@ const route = useRoute(), router = useRouter(), auth = useAuthStore()
 const governance = computed(() => props.portal === 'admin')
 const scope = computed(() => governance.value ? '治理管理员后台' : '企业 HR 工作台')
 const mobileOpen = ref(false), collapsed = ref(false)
+const pipelineEnabled = ref(false)
+onMounted(async () => {
+  if (governance.value) {
+    try { pipelineEnabled.value = (await insightService.getAgentPipelineStatus()).enabled } catch { pipelineEnabled.value = false }
+  }
+})
 const menuButton = ref<HTMLButtonElement>(), sidebar = ref<HTMLElement>()
 const key = `ci-business-navigation-${props.portal}`
 try { collapsed.value = localStorage.getItem(key) === 'collapsed' } catch { /* Storage is optional. */ }
@@ -19,6 +26,7 @@ const items = computed(() => governance.value ? [
   { path: '/admin/data', label: '数据资产', icon: Database, description: '来源、版本与同步' },
   { path: '/admin/reviews', label: '候选复核', icon: UserCheck, description: '核验证据与岗位定义' },
   { path: '/admin/quality', label: '质量与发布', icon: ShieldCheck, description: '验收与发布边界' },
+  ...(pipelineEnabled.value ? [{ path: '/admin/agent', label: '智能体编排', icon: Database, description: '自动处理与描述生成' }] : []),
 ] : [
   { path: '/enterprise/dashboard', label: '市场岗位洞察', icon: BarChart3, description: '市场变化与招聘决策' },
   { path: '/enterprise/talent', label: '人才库与批量诊断', icon: UsersRound, description: '简历与人岗匹配' },

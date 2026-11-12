@@ -6,7 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useBusinessUnsaved } from '@/composables/useBusinessUnsaved'
 import UiState from '@/components/ui/UiState.vue'
 import { insightService } from '@/services/insightService'
-import type { ReviewItem } from '@/types/domain'
+import type { AgentDescriptionData, DescriptionMissing, ReviewItem } from '@/types/domain'
 
 const items = ref<ReviewItem[]>([])
 const versions = ref<Array<Record<string, any>>>([])
@@ -14,6 +14,40 @@ const loading = ref(false)
 const saving = ref(false)
 const error = ref('')
 const editing = ref<ReviewItem | null>(null)
+const description = ref<AgentDescriptionData | DescriptionMissing | null>(null)
+const descriptionLoading = ref(false), descriptionSaving = ref(false), pipelineEnabled = ref(false)
+const descriptionError = ref('')
+const descriptionReasons: Record<string, string> = { disabled: '岗位描述生成未开启', not_generated: '岗位描述尚未生成', draft_changed: '生成期间草稿发生变更，请重新生成', frozen: '草稿已冻结，无法生成描述' }
+const availableDescription = computed(() => description.value && 'markdown' in description.value ? description.value : null)
+const missingDescription = computed(() => description.value && 'reason' in description.value ? descriptionReasons[description.value.reason] : '')
+async function loadDescription(id: string) {
+  descriptionLoading.value = true; descriptionError.value = ''
+  try {
+    const result = await insightService.getDraftDescription(id)
+    if (editing.value?.id === id) description.value = result
+  } catch (reason: any) { if (editing.value?.id === id) descriptionError.value = reason.message || '描述读取失败' }
+  finally { if (editing.value?.id === id) descriptionLoading.value = false }
+}
+async function regenerateDescription() {
+  if (!editing.value || descriptionSaving.value) return
+  if (editorDirty.value) { ElMessage.warning('请先保存草稿修改，再重新打开并生成描述'); return }
+  const id = editing.value.id
+  descriptionSaving.value = true
+  try {
+    const result = await insightService.regenerateDraftDescription(id)
+    if (result.status === 'skipped') ElMessage.warning(descriptionReasons[result.reason || ''] || '本次生成已跳过，请稍后重试')
+    await loadDescription(id)
+  } catch (reason: any) { ElMessage.error(reason.message || '重生成失败') }
+  finally { descriptionSaving.value = false }
+}
+async function downloadDescription(format: 'md' | 'docx') {
+  if (!editing.value) return
+  try {
+    const blob = await insightService.downloadDraftDescription(editing.value.id, format)
+    const url = URL.createObjectURL(blob), link = document.createElement('a')
+    link.href = url; link.download = `${editing.value.roleName}.${format}`; link.click(); URL.revokeObjectURL(url)
+  } catch (reason: any) { ElMessage.error(reason.message || '下载失败') }
+}
 const versionDetail = ref<Record<string, any> | null>(null)
 const versionDetailLoading = ref(false)
 type ReviewCategory = 'new_role' | 'definition_update' | 'skill_change'
@@ -73,6 +107,8 @@ async function load() {
 function names(values: any[] = []) { return values.map(item => typeof item === 'string' ? item : item.skill_name || item.scenario || '').filter(Boolean).join('\n') }
 function openEditor(item: ReviewItem) {
   editing.value = item
+  description.value = null
+  if (pipelineEnabled.value) void loadDescription(item.id)
   form.publicationTitle = item.definition.publication_title || (item.candidateType === 'new_role' ? '新岗位发现' : item.candidateType === 'definition_update' ? '岗位定义更新' : '岗位能力变化')
   form.responsibilities = names(item.definition.core_responsibilities)
   form.requiredSkills = names(item.definition.required_skills)
@@ -173,7 +209,10 @@ function preview(value: any) {
   if (value === 'recent_first_seen_multi_source_minimum_5_postings_plus_emerging_term') return '多来源、近期首现且含新兴技术词'
   return value
 }
-onMounted(load)
+onMounted(async () => {
+  void load()
+  try { pipelineEnabled.value = (await insightService.getAgentPipelineStatus()).enabled } catch { pipelineEnabled.value = false }
+})
 </script>
 
 <template>
@@ -211,6 +250,13 @@ onMounted(load)
         <section v-else class="change-evidence"><article v-for="change in editing.definition.changes" :key="change.skill_id"><strong>{{ change.skill_name }}</strong><b>{{ change.change_pp > 0 ? '+' : '' }}{{ change.change_pp }} pp</b><small>{{ change.analysis_note }}</small></article></section>
         <label><span>复核备注</span><textarea v-model="form.note" rows="3" placeholder="记录修改依据或判断理由" name="note" autocomplete="off" /></label>
         <section class="evidence-records"><div><b>{{ editing.evidence.length }} 条</b></div><article v-for="record in editing.evidence.slice(0, 6)" :key="record.recordId || record.period"><strong>{{ record.source || record.type }}</strong><small>{{ record.period }} · {{ record.recordId || '聚合证据' }}</small><p>{{ record.excerpt }}</p></article></section>
+        <section v-if="pipelineEnabled" class="agent-description">
+          <header><h3>岗位描述</h3><button v-if="editing.status === 'pending'" class="secondary-btn" :disabled="descriptionSaving || descriptionLoading" @click="regenerateDescription">{{ descriptionSaving ? '正在生成…' : '重新生成' }}</button></header>
+          <p v-if="descriptionLoading" role="status">正在读取描述…</p>
+          <p v-if="descriptionError" role="alert">{{ descriptionError }} <button class="secondary-btn" @click="loadDescription(editing.id)">重试</button></p>
+          <p v-if="missingDescription">{{ missingDescription }}</p>
+          <template v-if="availableDescription"><p v-if="availableDescription.stale" class="description-stale">草稿已变更，描述可能过期</p><small>{{ availableDescription.provider === 'rules' ? '规则模板' : 'DeepSeek' }} · {{ availableDescription.generatedAt.replace('T', ' ') }}</small><pre>{{ availableDescription.markdown }}</pre><div class="description-downloads"><button class="secondary-btn" @click="downloadDescription('md')">下载 Markdown</button><button class="secondary-btn" @click="downloadDescription('docx')">下载 Word</button></div></template>
+        </section>
         <footer><button class="reject-btn" @click="act(editing, 'reject')"><X :size="16" />驳回</button><button v-if="editingIsRole" class="secondary-btn" :disabled="saving" @click="saveDefinition"><Save :size="16" />保存草稿</button><button class="primary-btn" :disabled="saving" @click="act(editing, 'approve')"><Check :size="16" />批准并生成版本</button></footer>
       </div>
     </el-drawer>
@@ -230,5 +276,6 @@ onMounted(load)
 </template>
 
 <style scoped>
+.agent-description{padding:16px 0;border-top:1px solid #e3ebe9}.agent-description header,.description-downloads{display:flex;align-items:center;justify-content:space-between;gap:12px}.description-downloads{justify-content:flex-start;flex-wrap:wrap}.agent-description h3{margin:0;font-size:15px}.agent-description pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;line-height:1.8;max-height:440px;overflow:auto;padding:12px;background:#f4f8f7}.agent-description small{color:#75837f}.description-stale{color:#a85b22;background:#fff4e9;padding:10px}
 .review-card-head{display:flex;align-items:center;justify-content:space-between}.enterprise-source-label{padding:3px 7px;border-radius:4px;background:#e8f6f3;color:#0b8177;font-size:10px;font-weight:700}.enterprise-review-summary{margin:-4px 0 12px;padding:8px 10px;background:#f2f8f7;color:#5f6f6b;font-size:11px}
 </style>

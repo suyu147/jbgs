@@ -17,7 +17,7 @@ const fieldErrors = computed(() => ({companyName: form.companyName.trim().length
 const fileName = ref('')
 const valid = computed(() => Number.isInteger(form.openingCount) && form.openingCount >= 1 && form.openingCount <= 10000 && form.companyName.trim().length >= 2 && form.roleName.trim().length >= 2 && form.jobCategory.trim().length >= 2 && lines(form.responsibilities).length > 0 && lines(form.requiredSkills).length > 0)
 function lines(value: string) { return value.split(/\r?\n|[,，]/).map(item => item.trim()).filter(Boolean) }
-function stateClass(value: string) { return value === 'approved' ? 'approved' : value === 'rejected' ? 'rejected' : 'pending' }
+function stateClass(value: string) { return ['approved', 'published'].includes(value) ? 'approved' : ['rejected', 'withdrawn'].includes(value) ? 'rejected' : 'pending' }
 async function load() {
   try { submissions.value = (await insightService.getEnterpriseJobSubmissions()).items }
   catch (reason: any) { error.value = reason.message || '提交记录读取失败' }
@@ -39,8 +39,8 @@ async function submit() {
       location: form.location.trim(), openingCount: form.openingCount, responsibilities: lines(form.responsibilities), requiredSkills: lines(form.requiredSkills),
       bonusSkills: lines(form.bonusSkills), applicationScenarios: lines(form.applicationScenarios), jdText: form.jdText,
     })
-    submissions.value = [item, ...submissions.value]
-    status.value = '岗位已提交至候选复核。可在右侧提交记录中跟踪状态，批准后进入发布流程。'
+    await load()
+    status.value = item.draftId ? '岗位已提交至候选复核。可在右侧提交记录中跟踪状态，批准后进入发布流程。' : '岗位已接入原始数据批次。可在右侧查看提交记录。'
     Object.assign(form, { roleName: '', jobCategory: '', location: '', openingCount: 1, responsibilities: '', requiredSkills: '', bonusSkills: '', applicationScenarios: '', jdText: '' })
     fileName.value = ''; attempted.value = false; savedForm.value = JSON.stringify(form)
   } catch (reason: any) { error.value = reason.message || '岗位提交失败' }
